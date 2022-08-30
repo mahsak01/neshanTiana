@@ -24,7 +24,7 @@
                     android:layout_height="56dp">
 
                     <ImageView
-                        android:id="@+id/FragmentNeshanMap_backBtn"
+                        android:id="@+id/FragmentAddLocationCustomer_backBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="start|center_vertical"
@@ -36,7 +36,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?textAppearanceHeadline6"
-                        android:text="نقشه"
+                        android:text="تعریف مختصات مشتری"
                         android:paddingRight="20dp"
                         android:textColor="@color/white"
                         android:layout_gravity="end|center_vertical" />
@@ -44,19 +44,52 @@
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
-
-        <org.neshan.mapsdk.MapView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginTop="56dp"
-            android:id="@+id/FragmentNeshanMap_mapMv"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/FragmentAddLocationCustomer_accountApexListNameTI"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:hint="نام مشتری"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_round_search_24"
+                    android:drawablePadding="5dp"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <org.neshan.mapsdk.MapView
+            android:layout_marginTop="116dp"
+            android:id="@+id/FragmentAddLocationCustomer_mapMv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
+
 
 
         </org.neshan.mapsdk.MapView>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/FragmentNeshanMap_myLocationBtn"
+            android:id="@+id/FragmentAddLocationCustomer_myLocationBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -67,7 +100,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/FragmentNeshanMap_acceptBtn"
+            android:id="@+id/FragmentAddLocationCustomer_acceptBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -75,7 +108,7 @@
             android:backgroundTint="@color/green"
             android:src="@drawable/ic_baseline_check_24"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/FragmentNeshanMap_myLocationBtn"
+            app:layout_constraintBottom_toTopOf="@+id/FragmentAddLocationCustomer_myLocationBtn"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

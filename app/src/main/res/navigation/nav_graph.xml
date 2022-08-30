@@ -9,15 +9,18 @@
         android:name="com.tiana.neshantiana.MainFragment"
         android:label="MainFragment" >
         <action
-            android:id="@+id/action_mainFragment_to_neshanMapFragment"
-            app:destination="@id/neshanMapFragment" />
+            android:id="@+id/action_mainFragment_to_addLocationCustomerMapFragment"
+            app:destination="@id/addLocationCustomerMapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myLocationMapFragment"
+            app:destination="@id/myLocationMapFragment" />
     </fragment>
     <fragment
-        android:id="@+id/neshanMapFragment"
-        android:name="com.tiana.neshantiana.NeshanMapFragment"
-        android:label="NeshanMapFragment" >
-        <action
-            android:id="@+id/action_neshanMapFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </fragment>
+        android:id="@+id/addLocationCustomerMapFragment"
+        android:name="com.tiana.neshantiana.AddLocationCustomerMapFragment"
+        android:label="AddLocationCustomerMapFragment" />
+    <fragment
+        android:id="@+id/myLocationMapFragment"
+        android:name="com.tiana.neshantiana.MyLocationMapFragment"
+        android:label="MyLocationMapFragment" />
 </navigation>

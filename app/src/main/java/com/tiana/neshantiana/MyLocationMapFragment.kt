@@ -3,6 +3,7 @@ package com.tiana.neshantiana
 import android.Manifest
 import android.content.Intent
 import android.content.IntentSender
+import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -15,30 +16,32 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.tiana.neshantiana.databinding.FragmentNeshanMapBinding
 import com.carto.styles.AnimationStyle
-import com.carto.styles.AnimationStyleBuilder
-import com.carto.styles.AnimationType
 import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.tiana.neshantiana.databinding.FragmentMyLocationMapBinding
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
 
-class NeshanMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventListener {
+
+class MyLocationMapFragment:Fragment() {
+
+    lateinit var binding:FragmentMyLocationMapBinding
+
     // map UI element
     var map: MapView? = null
 
@@ -69,19 +72,18 @@ class NeshanMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventL
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
 
-    private var selectMarker: Marker? = null
-
-    private lateinit var binding: FragmentNeshanMapBinding
 
 
-    private var lat: String? = null
 
-    private var lon: String? = null
-    private val viewModel: LocationAddressViewModel by viewModel()
-    private var loadingFragment: LoadingFragment? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-    private val shareViewModel: LocationShareViewModel by activityViewModels()
-
+        binding = FragmentMyLocationMapBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
     override fun onStart() {
         super.onStart()
@@ -91,130 +93,41 @@ class NeshanMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventL
         startReceivingLocationUpdates();
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        binding = FragmentNeshanMapBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
-
-    // We use findViewByID for every element in our layout file here
-    private fun initViews() {
-        map = binding.FragmentNeshanMapMapMv
-    }
-
-    // Initializing layout references (views, map and map events)
-    private fun initLayoutReferences() {
-        // Initializing views
-        initViews()
-        // when long clicked on map, a marker is added in clicked location
-        map!!.setOnMapLongClickListener { latLng: LatLng? ->
-            map!!.addMarker(
-                createMarker(latLng)
-            )
-            lat = latLng?.latitude.toString()
-            lon = latLng?.longitude.toString()
-        }
-    }
-
-    // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
-        // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
-        // all animation features on it and then call buildStyle() method that returns an object of type
-        // AnimationStyle
-        val animStBl = AnimationStyleBuilder()
-        animStBl.fadeAnimationType = AnimationType.ANIMATION_TYPE_SMOOTHSTEP
-        animStBl.sizeAnimationType = AnimationType.ANIMATION_TYPE_SPRING
-        animStBl.phaseInDuration = 0.5f
-        animStBl.phaseOutDuration = 0.5f
-        animSt = animStBl.buildStyle()
-
-        // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
-        // and then call buildStyle method on it. This method returns an object of type MarkerStyle
-
-        if (selectMarker != null)
-            map?.removeMarker(selectMarker)
-
-        val markStCr = MarkerStyleBuilder()
-        markStCr.size = 30f
-        markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
-            BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
-            )
-        )
-        // AnimationStyle object - that was created before - is used here
-        markStCr.animationStyle = animSt
-        val markSt = markStCr.buildStyle()
-
-        selectMarker = Marker(loc, markSt)
-        activity?.runOnUiThread {
-            if (selectMarker != null)
-                this.binding.FragmentNeshanMapAcceptBtn.visibility = View.VISIBLE
-            else
-                this.binding.FragmentNeshanMapAcceptBtn.visibility = View.GONE
-        }
-        // Creating marker
-        return selectMarker
-    }
-
-
     override fun onResume() {
         super.onResume()
         startLocationUpdates()
         setListener()
     }
-
     private fun setListener() {
-        this.binding.FragmentNeshanMapMyLocationBtn.setOnClickListener {
+        this.binding.FragmentMyLocationMyLocationBtn.setOnClickListener {
             if (userLocation != null) {
                 val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                 map!!.moveCamera(latLng, 0f)
                 map!!.setZoom(15f, 0.25f)
-                map!!.addMarker(
-                    createMarker(latLng)
-                )
-                lat = latLng.latitude.toString()
-                lon = latLng.longitude.toString()
-            }
-        }
-        this.binding.FragmentNeshanMapAcceptBtn.setOnClickListener {
-            if (lat != null && lon != null) {
-                this.loadingFragment =
-                    LoadingFragment()
-                loadingFragment?.show(requireActivity().supportFragmentManager, null)
-                viewModel.getLocationAddress(lat!!, lon!!)
-
 
             }
-
         }
-
-        this.binding.FragmentNeshanMapBackBtn.setOnClickListener {
+        this.binding.FragmentMyLocationBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
 
         }
-        viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                loadingFragment?.dismiss()
-                val acceptLocationAddressDialogFragment =
-                    AcceptLocationAddressDialogFragment(it.formatted_address.toString(), this)
-                acceptLocationAddressDialogFragment.show(
-                    requireActivity().supportFragmentManager,
-                    null
-                )
-            }
-
-        }
     }
 
-    override fun onPause() {
+     override fun onPause() {
         super.onPause()
         stopLocationUpdates()
     }
+    private fun initLayoutReferences() {
+        // Initializing views
+        initViews()
+
+    }
+
+    // We use findViewByID for every element in our layout file here
+    private fun initViews() {
+        map = binding.FragmentMyLocationMapMv
+    }
+
 
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -365,7 +278,6 @@ class NeshanMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventL
             addUserMarker(LatLng(userLocation!!.latitude, userLocation!!.longitude))
         }
     }
-
     private fun addUserMarker(loc: LatLng) {
         //remove existing marker from map
         if (marker != null) {
@@ -389,11 +301,9 @@ class NeshanMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventL
         map!!.addMarker(marker)
     }
 
-    override fun accept(address: String) {
-        shareViewModel.set(com.tiana.neshantiana.data.model.Location(lat!!, lon!!, address))
-        this.requireActivity().onBackPressed()
 
-    }
+
+
 
 
 }
