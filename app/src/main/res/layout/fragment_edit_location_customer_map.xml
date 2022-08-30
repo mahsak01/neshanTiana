@@ -24,7 +24,7 @@
                     android:layout_height="56dp">
 
                     <ImageView
-                        android:id="@+id/FragmentAddLocationCustomer_backBtn"
+                        android:id="@+id/FragmentEditLocationCustomer_backBtn"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="start|center_vertical"
@@ -52,7 +52,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/FragmentAddLocationCustomer_customerNameTI"
+                android:id="@+id/FragmentEditLocationCustomer_customerNameTI"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,13 +77,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <org.neshan.mapsdk.MapView
-            android:id="@+id/FragmentAddLocationCustomer_mapMv"
+            android:id="@+id/FragmentEditLocationCustomer_mapMv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="116dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/FragmentAddLocationCustomer_myLocationBtn"
+            android:id="@+id/FragmentEditLocationCustomer_myLocationBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -94,7 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/FragmentAddLocationCustomer_acceptBtn"
+            android:id="@+id/FragmentEditLocationCustomer_acceptBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -102,7 +102,7 @@
             android:backgroundTint="@color/green"
             android:src="@drawable/ic_baseline_check_24"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/FragmentAddLocationCustomer_myLocationBtn"
+            app:layout_constraintBottom_toTopOf="@+id/FragmentEditLocationCustomer_myLocationBtn"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

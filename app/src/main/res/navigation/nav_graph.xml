@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myLocationMapFragment"
             app:destination="@id/myLocationMapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_editLocationCustomerMapFragment"
+            app:destination="@id/editLocationCustomerMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/addLocationCustomerMapFragment"
@@ -23,4 +26,8 @@
         android:id="@+id/myLocationMapFragment"
         android:name="com.tiana.neshantiana.MyLocationMapFragment"
         android:label="MyLocationMapFragment" />
+    <fragment
+        android:id="@+id/editLocationCustomerMapFragment"
+        android:name="com.tiana.neshantiana.EditLocationCustomerMapFragment"
+        android:label="EditLocationCustomerMapFragment" />
 </navigation>

@@ -1,9 +1,9 @@
 package com.tiana.neshantiana
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.IntentSender
-import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -11,8 +11,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -22,8 +25,6 @@ import com.carto.utils.BitmapUtils
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -37,10 +38,9 @@ import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
 
+class MyLocationMapFragment : Fragment() {
 
-class MyLocationMapFragment:Fragment() {
-
-    lateinit var binding:FragmentMyLocationMapBinding
+    lateinit var binding: FragmentMyLocationMapBinding
 
     // map UI element
     var map: MapView? = null
@@ -72,7 +72,15 @@ class MyLocationMapFragment:Fragment() {
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
 
-
+    val previewRequest =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+             when (it.resultCode) {
+                        AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
+                        AppCompatActivity.RESULT_CANCELED -> {
+                            mRequestingLocationUpdates = false
+                        }
+                    }
+                }
 
 
     override fun onCreateView(
@@ -80,7 +88,6 @@ class MyLocationMapFragment:Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentMyLocationMapBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -98,29 +105,28 @@ class MyLocationMapFragment:Fragment() {
         startLocationUpdates()
         setListener()
     }
+
     private fun setListener() {
         this.binding.FragmentMyLocationMyLocationBtn.setOnClickListener {
             if (userLocation != null) {
                 val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                 map!!.moveCamera(latLng, 0f)
                 map!!.setZoom(15f, 0.25f)
-
             }
         }
         this.binding.FragmentMyLocationBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
-
         }
     }
 
-     override fun onPause() {
+    override fun onPause() {
         super.onPause()
         stopLocationUpdates()
     }
+
     private fun initLayoutReferences() {
         // Initializing views
         initViews()
-
     }
 
     // We use findViewByID for every element in our layout file here
@@ -248,19 +254,6 @@ class MyLocationMapFragment:Fragment() {
             }).check()
     }
 
-    // TODO: change it this method is deprecated! https://stackoverflow.com/questions/63435989/startactivityforresultandroid-content-intent-int-is-deprecated
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_CODE -> when (resultCode) {
-                AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
-                AppCompatActivity.RESULT_CANCELED -> {
-                    mRequestingLocationUpdates = false
-                }
-            }
-        }
-    }
-
     private fun openSettings() {
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -270,7 +263,8 @@ class MyLocationMapFragment:Fragment() {
         )
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        previewRequest.launch(intent)
+
     }
 
     private fun onLocationChange() {
@@ -278,6 +272,7 @@ class MyLocationMapFragment:Fragment() {
             addUserMarker(LatLng(userLocation!!.latitude, userLocation!!.longitude))
         }
     }
+
     private fun addUserMarker(loc: LatLng) {
         //remove existing marker from map
         if (marker != null) {
@@ -300,10 +295,4 @@ class MyLocationMapFragment:Fragment() {
         // Adding user marker to map!
         map!!.addMarker(marker)
     }
-
-
-
-
-
-
 }

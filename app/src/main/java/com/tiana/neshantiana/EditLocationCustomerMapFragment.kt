@@ -10,7 +10,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +33,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.tiana.neshantiana.databinding.FragmentAddLocationCustomerMapBinding
+import com.tiana.neshantiana.databinding.FragmentEditLocationCustomerMapBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
@@ -39,7 +41,7 @@ import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
 
-class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventListener {
+class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFragment.EventListener {
     // map UI element
     var map: MapView? = null
 
@@ -69,7 +71,7 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
     private var selectMarker: Marker? = null
-    private lateinit var binding: FragmentAddLocationCustomerMapBinding
+    private lateinit var binding: FragmentEditLocationCustomerMapBinding
     private var lat: String? = null
     private var lon: String? = null
     private val viewModel: LocationAddressViewModel by viewModel()
@@ -91,9 +93,10 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
     override fun onStart() {
         super.onStart()
         // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
+
     }
 
     override fun onCreateView(
@@ -101,13 +104,13 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddLocationCustomerMapBinding.inflate(layoutInflater, container, false)
+        binding = FragmentEditLocationCustomerMapBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
-        map = binding.FragmentAddLocationCustomerMapMv
+        map = binding.FragmentEditLocationCustomerMapMv
     }
 
     // Initializing layout references (views, map and map events)
@@ -120,10 +123,11 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
             lat = latLng?.latitude.toString()
             lon = latLng?.longitude.toString()
         }
+
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
+    private fun createMarker(loc: LatLng? , select:Boolean=true): Marker? {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -137,38 +141,65 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
 
-        if (selectMarker != null)
-            map?.removeMarker(selectMarker)
-        val markStCr = MarkerStyleBuilder()
-        markStCr.size = 30f
-        markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
-            BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+        if (!select){
+            val markStCr = MarkerStyleBuilder()
+            markStCr.size = 30f
+            markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
+                BitmapFactory.decodeResource(
+                    resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                )
             )
-        )
-        // AnimationStyle object - that was created before - is used here
-        markStCr.animationStyle = animSt
-        val markSt = markStCr.buildStyle()
+            // AnimationStyle object - that was created before - is used here
+            markStCr.animationStyle = animSt
+            val markSt = markStCr.buildStyle()
 
-        selectMarker = Marker(loc, markSt)
-        activity?.runOnUiThread {
-            if (selectMarker != null)
-                this.binding.FragmentAddLocationCustomerAcceptBtn.visibility = View.VISIBLE
-            else
-                this.binding.FragmentAddLocationCustomerAcceptBtn.visibility = View.GONE
+            // Creating marker
+            return Marker(loc, markSt)
         }
-        // Creating marker
-        return selectMarker
+        else{
+            if (selectMarker != null)
+                map?.removeMarker(selectMarker)
+            val markStCr = MarkerStyleBuilder()
+            markStCr.size = 30f
+            markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
+                BitmapFactory.decodeResource(
+                    resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                )
+            )
+            // AnimationStyle object - that was created before - is used here
+            markStCr.animationStyle = animSt
+            val markSt = markStCr.buildStyle()
+
+            selectMarker = Marker(loc, markSt)
+            activity?.runOnUiThread {
+                if (selectMarker != null)
+                    this.binding.FragmentEditLocationCustomerAcceptBtn.visibility = View.VISIBLE
+                else
+                    this.binding.FragmentEditLocationCustomerAcceptBtn.visibility = View.GONE
+            }
+            // Creating marker
+            return selectMarker
+        }
+
     }
 
     override fun onResume() {
         super.onResume()
         startLocationUpdates()
         setListener()
+        setInformation()
+
     }
 
+    //TODO change with last location
+    private fun setInformation(){
+        val latLng = LatLng(36.424520, 54.9665126)
+        map!!.addMarker(
+            createMarker(latLng,false)
+        )
+    }
     private fun setListener() {
-        this.binding.FragmentAddLocationCustomerMyLocationBtn.setOnClickListener {
+        this.binding.FragmentEditLocationCustomerMyLocationBtn.setOnClickListener {
             if (userLocation != null) {
                 val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                 map!!.moveCamera(latLng, 0f)
@@ -178,9 +209,10 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                 )
                 lat = latLng.latitude.toString()
                 lon = latLng.longitude.toString()
+
             }
         }
-        this.binding.FragmentAddLocationCustomerAcceptBtn.setOnClickListener {
+        this.binding.FragmentEditLocationCustomerAcceptBtn.setOnClickListener {
             if (lat != null && lon != null) {
                 this.loadingFragment =
                     LoadingFragment()
@@ -189,7 +221,7 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
             }
         }
 
-        this.binding.FragmentAddLocationCustomerBackBtn.setOnClickListener {
+        this.binding.FragmentEditLocationCustomerBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
         }
         viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
@@ -370,6 +402,8 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
 
         // Adding user marker to map!
         map!!.addMarker(marker)
+
+
     }
 
     override fun accept(address: String) {
@@ -377,6 +411,5 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
         this.requireActivity().onBackPressed()
 
     }
-
 
 }
