@@ -25,7 +25,7 @@ fun createApiServiceInstance(): ApiService {
         .addInterceptor {
             val oldRequest = it.request()
             val newRequestBuilder = oldRequest.newBuilder()
-            newRequestBuilder.addHeader("Api-Key", "service.1c417c2841534c2a956014afd5a816b8")
+            newRequestBuilder.addHeader("Api-Key", "service.030ffda5273847449d5d2799184cc70a")
             return@addInterceptor it.proceed(newRequestBuilder.build())
         }.build()
 

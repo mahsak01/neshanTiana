@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_mainFragment_to_searchLocationCustomerMapFragment"
             app:destination="@id/searchLocationCustomerMapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_routingLocationMapFragment"
+            app:destination="@id/routingLocationMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/addLocationCustomerMapFragment"
@@ -37,4 +40,8 @@
         android:id="@+id/searchLocationCustomerMapFragment"
         android:name="com.tiana.neshantiana.SearchLocationCustomerMapFragment"
         android:label="SearchLocationCustomerMapFragment" />
+    <fragment
+        android:id="@+id/routingLocationMapFragment"
+        android:name="com.tiana.neshantiana.RoutingLocationMapFragment"
+        android:label="RoutingLocationMapFragment" />
 </navigation>

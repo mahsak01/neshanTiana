@@ -43,6 +43,11 @@ class LocationMenuBottomSheetFragment:BottomSheetDialogFragment() {
             this.findNavController()
                 .navigate(R.id.searchLocationCustomerMapFragment)
         }
+        this.binding.fragmentLocationMenuBottomSheetRoutingLl.setOnClickListener {
+            dismiss()
+            this.findNavController()
+                .navigate(R.id.routingLocationMapFragment)
+        }
     }
 
     override fun onCreateView(
