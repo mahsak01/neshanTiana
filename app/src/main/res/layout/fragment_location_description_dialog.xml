@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/item_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layoutDirection="rtl">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_location"
+            app:lottie_speed="1"
+            tools:ignore="MissingConstraints" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
+            app:layout_constraintTop_toTopOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView">
+
+            <TextView
+                android:id="@+id/fragmentLocationDescriptionDialog_customerNameTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="اسم مشتری"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/fragmentLocationDescriptionDialog_customerLocationTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="آدرس"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/fragmentLocationDescriptionDialog_dateTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="1400/10/20"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
