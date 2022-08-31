@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_mainFragment_to_routingLocationMapFragment"
             app:destination="@id/routingLocationMapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_lastVisitsLocationMapFragment"
+            app:destination="@id/lastVisitsLocationMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/addLocationCustomerMapFragment"
@@ -44,4 +47,8 @@
         android:id="@+id/routingLocationMapFragment"
         android:name="com.tiana.neshantiana.RoutingLocationMapFragment"
         android:label="RoutingLocationMapFragment" />
+    <fragment
+        android:id="@+id/lastVisitsLocationMapFragment"
+        android:name="com.tiana.neshantiana.LastVisitsLocationMapFragment"
+        android:label="LastVisitsLocationMapFragment" />
 </navigation>

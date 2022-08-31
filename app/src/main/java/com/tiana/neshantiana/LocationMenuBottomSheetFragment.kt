@@ -48,6 +48,12 @@ class LocationMenuBottomSheetFragment:BottomSheetDialogFragment() {
             this.findNavController()
                 .navigate(R.id.routingLocationMapFragment)
         }
+
+        this.binding.fragmentLocationMenuBottomSheetLastVisitsLl.setOnClickListener {
+            dismiss()
+            this.findNavController()
+                .navigate(R.id.lastVisitsLocationMapFragment)
+        }
     }
 
     override fun onCreateView(
