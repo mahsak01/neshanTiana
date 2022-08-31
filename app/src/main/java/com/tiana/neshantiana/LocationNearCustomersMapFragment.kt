@@ -30,22 +30,20 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.tiana.neshantiana.databinding.FragmentRoutingLocationMapBinding
+import com.tiana.neshantiana.databinding.FragmentLocationNearCustomersMapBinding
 import org.neshan.common.model.LatLng
-import org.neshan.common.utils.PolylineEncoding
 import org.neshan.mapsdk.MapView
+import org.neshan.mapsdk.model.Circle
 import org.neshan.mapsdk.model.Marker
 import org.neshan.mapsdk.model.Polyline
-import org.neshan.servicessdk.direction.NeshanDirection
-import org.neshan.servicessdk.direction.model.NeshanDirectionResult
-import retrofit2.*
 import java.text.DateFormat
 import java.util.*
 
 
-class RoutingLocationMapFragment : Fragment() {
+class LocationNearCustomersMapFragment : Fragment() {
 
-    lateinit var binding: FragmentRoutingLocationMapBinding
+
+    lateinit var binding: FragmentLocationNearCustomersMapBinding
 
     // map UI element
     var map: MapView? = null
@@ -81,7 +79,9 @@ class RoutingLocationMapFragment : Fragment() {
     private var decodedStepByStepPath: ArrayList<LatLng>? = null
     private var routeOverviewPolylinePoints: ArrayList<LatLng>? = null
 
-    private var onMapPolyline:Polyline?=null
+    private var onMapPolyline: Polyline? = null
+
+    private var circle: Circle? = null
 
     val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -93,22 +93,21 @@ class RoutingLocationMapFragment : Fragment() {
             }
         }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRoutingLocationMapBinding.inflate(layoutInflater, container, false)
+        binding = FragmentLocationNearCustomersMapBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
         // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onResume() {
@@ -118,23 +117,15 @@ class RoutingLocationMapFragment : Fragment() {
     }
 
     private fun setListener() {
-        this.binding.FragmentRoutingLocationMapMyLocationBtn.setOnClickListener {
+        this.binding.FragmentLocationNearCustomersMapMyLocationBtn.setOnClickListener {
             if (userLocation != null) {
                 val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                 map!!.moveCamera(latLng, 0f)
                 map!!.setZoom(15f, 0.25f)
             }
         }
-        this.binding.FragmentRoutingLocationMapRoutingBtn.setOnClickListener {
-            neshanRoutingApi()
-        }
-        this.binding.FragmentRoutingLocationMapBackBtn.setOnClickListener {
+        this.binding.FragmentLocationNearCustomersMapBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
-        }
-        this.binding.FragmentRoutingLocationMapRoutingWithMapBtn.setOnClickListener {
-            val uri = java.lang.String.format(Locale.ENGLISH, "geo:%f,%f", customerLocationMarker?.latLng?.latitude, customerLocationMarker?.latLng?.longitude)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-            context?.startActivity(intent)
         }
     }
 
@@ -151,51 +142,9 @@ class RoutingLocationMapFragment : Fragment() {
 
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
-        map = binding.FragmentRoutingLocationMapMapMv
+        map = binding.FragmentLocationNearCustomersMapMapMv
 
     }
-
-    private fun neshanRoutingApi() {
-        NeshanDirection.Builder(
-            "service.030ffda5273847449d5d2799184cc70a",
-            myLocationMarker?.latLng,
-            customerLocationMarker?.latLng
-        ).build().call(object : Callback<NeshanDirectionResult> {
-            override fun onResponse(
-                call: Call<NeshanDirectionResult>,
-                response: Response<NeshanDirectionResult>
-            ) {
-                val route = response.body()?.routes?.get(0)
-                routeOverviewPolylinePoints =
-                    ArrayList(PolylineEncoding.decode(route?.overviewPolyline?.encodedPolyline))
-                decodedStepByStepPath = ArrayList()
-                // decoding each segment of steps and putting to an array
-                for (step in route?.legs?.get(0)!!.directionSteps) {
-                    decodedStepByStepPath?.addAll(PolylineEncoding.decode(step.encodedPolyline))
-                }
-                onMapPolyline =  Polyline (routeOverviewPolylinePoints, getLineStyle());
-                //draw polyline between route points
-                map?.addPolyline(onMapPolyline);
-                // focusing camera on first point of drawn line
-                binding.FragmentRoutingLocationMapRoutingWithMapBtn.visibility=View.VISIBLE
-            }
-
-            override fun onFailure(call: Call<NeshanDirectionResult>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-
-    }
-    private fun getLineStyle(): LineStyle? {
-        val lineStCr = LineStyleBuilder()
-        lineStCr.color = Color(130.toShort(), 230.toShort(), 130.toShort(), 120.toShort())
-        lineStCr.width = 12f
-        lineStCr.stretchFactor = 0f
-        return lineStCr.buildStyle()
-    }
-
 
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -206,6 +155,7 @@ class RoutingLocationMapFragment : Fragment() {
                 if (userLocation == null) {
                     // location is received
                     userLocation = locationResult.lastLocation
+
                     if (userLocation != null) {
                         val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                         map!!.moveCamera(latLng, 0f)
@@ -299,7 +249,6 @@ class RoutingLocationMapFragment : Fragment() {
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -307,7 +256,6 @@ class RoutingLocationMapFragment : Fragment() {
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -327,7 +275,6 @@ class RoutingLocationMapFragment : Fragment() {
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         previewRequest.launch(intent)
-
     }
 
     private fun onLocationChange() {
@@ -336,16 +283,41 @@ class RoutingLocationMapFragment : Fragment() {
         }
     }
 
+    // Drawing circle on map
+    private fun drawCircle() {
+        // Here we use getLineStyle() method to define line styles
+        this.circle = Circle(
+            myLocationMarker?.latLng,
+            500.0,
+            Color(130.toShort(), 230.toShort(), 130.toShort(), 120.toShort()),
+            getLineStyle()
+        )
+        // adding the created circle on map
+        map?.addCircle(circle)
+    }
+
+    private fun getLineStyle(): LineStyle? {
+        val lineStCr = LineStyleBuilder()
+        lineStCr.color = Color(130.toShort(), 230.toShort(), 130.toShort(), 120.toShort())
+        lineStCr.width = 5f
+        lineStCr.stretchFactor = 0f
+        return lineStCr.buildStyle()
+    }
+
     //TODO change with last location
     private fun setInformation() {
-        var latLng = LatLng(36.424520, 54.9665126)
-        map!!.moveCamera(latLng, 0f)
-        map!!.setZoom(15f, 0.25f)
-        customerLocationMarker = createMarker(latLng)
+        var latLng = LatLng(36.4198056, 54.9611795)
         map!!.addMarker(
-            customerLocationMarker
+            createMarker(latLng)
         )
-        binding.FragmentRoutingLocationMapRoutingBtn.visibility = View.VISIBLE
+        latLng = LatLng(36.4188056, 54.9622795)
+        map!!.addMarker(
+            createMarker(latLng)
+        )
+        latLng = LatLng(36.4199056, 54.9622795)
+        map!!.addMarker(
+            createMarker(latLng)
+        )
         map!!.setOnMarkerClickListener {
             val locationDescriptionDialogFragment =
                 LocationDescriptionDialogFragment()
@@ -374,6 +346,10 @@ class RoutingLocationMapFragment : Fragment() {
 
         // Creating user marker
         myLocationMarker = Marker(loc, markSt)
+
+        if (circle!=null)
+            map?.removeCircle(circle)
+        drawCircle()
 
         // Adding user marker to map!
         map!!.addMarker(myLocationMarker)

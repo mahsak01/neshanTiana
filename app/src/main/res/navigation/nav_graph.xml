@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_mainFragment_to_dispersionCustomersLocationMapFragment"
             app:destination="@id/dispersionCustomersLocationMapFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_locationNearCustomersMapFragment"
+            app:destination="@id/locationNearCustomersMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/addLocationCustomerMapFragment"
@@ -58,4 +61,8 @@
         android:id="@+id/dispersionCustomersLocationMapFragment"
         android:name="com.tiana.neshantiana.DispersionCustomersLocationMapFragment"
         android:label="DispersionCustomersLocationMapFragment" />
+    <fragment
+        android:id="@+id/locationNearCustomersMapFragment"
+        android:name="com.tiana.neshantiana.LocationNearCustomersMapFragment"
+        android:label="LocationNearCustomersMapFragment" />
 </navigation>

@@ -59,6 +59,11 @@ class LocationMenuBottomSheetFragment:BottomSheetDialogFragment() {
             this.findNavController()
                 .navigate(R.id.dispersionCustomersLocationMapFragment)
         }
+        this.binding.fragmentLocationMenuBottomSheetNearCustomersLl.setOnClickListener {
+            dismiss()
+            this.findNavController()
+                .navigate(R.id.locationNearCustomersMapFragment)
+        }
     }
 
     override fun onCreateView(
