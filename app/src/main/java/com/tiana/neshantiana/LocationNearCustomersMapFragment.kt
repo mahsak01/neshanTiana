@@ -52,7 +52,7 @@ class LocationNearCustomersMapFragment : Fragment() {
     var animSt: AnimationStyle? = null
 
     // used to track request permissions
-    val REQUEST_CODE = 123
+    private val REQUEST_CODE = 123
 
     // location updates interval - 1 sec
     private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 1000
@@ -74,16 +74,10 @@ class LocationNearCustomersMapFragment : Fragment() {
     // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
     private var myLocationMarker: Marker? = null
-    private var customerLocationMarker: Marker? = null
-
-    private var decodedStepByStepPath: ArrayList<LatLng>? = null
-    private var routeOverviewPolylinePoints: ArrayList<LatLng>? = null
-
-    private var onMapPolyline: Polyline? = null
 
     private var circle: Circle? = null
 
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -143,7 +137,6 @@ class LocationNearCustomersMapFragment : Fragment() {
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentLocationNearCustomersMapMapMv
-
     }
 
     private fun initLocation() {
@@ -195,14 +188,10 @@ class LocationNearCustomersMapFragment : Fragment() {
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -236,7 +225,6 @@ class LocationNearCustomersMapFragment : Fragment() {
                     )
                         .show()
                 }
-
             }
     }
 
@@ -343,20 +331,17 @@ class LocationNearCustomersMapFragment : Fragment() {
             )
         )
         val markSt = markStCr.buildStyle()
-
         // Creating user marker
         myLocationMarker = Marker(loc, markSt)
-
         if (circle!=null)
             map?.removeCircle(circle)
         drawCircle()
-
         // Adding user marker to map!
         map!!.addMarker(myLocationMarker)
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
+    private fun createMarker(loc: LatLng?): Marker {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -366,10 +351,8 @@ class LocationNearCustomersMapFragment : Fragment() {
         animStBl.phaseInDuration = 0.5f
         animStBl.phaseOutDuration = 0.5f
         animSt = animStBl.buildStyle()
-
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
-
         val markStCr = MarkerStyleBuilder()
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
@@ -380,10 +363,7 @@ class LocationNearCustomersMapFragment : Fragment() {
         // AnimationStyle object - that was created before - is used here
         markStCr.animationStyle = animSt
         val markSt = markStCr.buildStyle()
-
         // Creating marker
         return Marker(loc, markSt)
-
     }
-
 }

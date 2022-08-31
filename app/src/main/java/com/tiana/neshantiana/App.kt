@@ -25,11 +25,9 @@ class App : Application() {
             }
             viewModel { LocationAddressViewModel(get()) }
         }
-
         startKoin {
             androidContext(this@App)
             modules(myModules)
         }
-
     }
 }

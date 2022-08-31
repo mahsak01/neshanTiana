@@ -79,7 +79,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
     private val shareViewModel: LocationShareViewModel by activityViewModels()
 
 
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -123,7 +123,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
             lat = latLng?.latitude.toString()
             lon = latLng?.longitude.toString()
         }
-
     }
 
     // This method gets a LatLng as input and adds a marker on that position
@@ -180,7 +179,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
             // Creating marker
             return selectMarker
         }
-
     }
 
     override fun onResume() {
@@ -188,7 +186,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         startLocationUpdates()
         setListener()
         setInformation()
-
     }
 
     //TODO change with last location
@@ -209,7 +206,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                 )
                 lat = latLng.latitude.toString()
                 lon = latLng.longitude.toString()
-
             }
         }
         this.binding.FragmentEditLocationCustomerAcceptBtn.setOnClickListener {
@@ -234,7 +230,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                     null
                 )
             }
-
         }
     }
 
@@ -291,14 +286,10 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -331,7 +322,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                     )
                         .show()
                 }
-
             }
     }
 
@@ -344,7 +334,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -352,7 +341,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -372,7 +360,6 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         previewRequest.launch(intent)
-
     }
 
     private fun onLocationChange() {
@@ -402,14 +389,9 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
 
         // Adding user marker to map!
         map!!.addMarker(marker)
-
-
     }
-
     override fun accept(address: String) {
         shareViewModel.set(com.tiana.neshantiana.data.model.Location(lat!!, lon!!, address))
         this.requireActivity().onBackPressed()
-
     }
-
 }

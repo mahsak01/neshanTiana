@@ -1,14 +1,12 @@
 package com.tiana.neshantiana
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import com.tiana.neshantiana.R
 import com.tiana.neshantiana.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -22,6 +20,7 @@ class MainFragment : Fragment() {
         setObserver()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setObserver() {
         shareViewModel.locationLiveData.observe(viewLifecycleOwner) {
             if (it != null) {

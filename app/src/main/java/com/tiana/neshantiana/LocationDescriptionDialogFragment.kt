@@ -7,12 +7,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.tiana.neshantiana.common.underlineText
-import com.tiana.neshantiana.databinding.FragmentAcceptLocationAddressDialogBinding
 import com.tiana.neshantiana.databinding.FragmentLocationDescriptionDialogBinding
 
 class LocationDescriptionDialogFragment : DialogFragment() {
@@ -59,6 +56,7 @@ class LocationDescriptionDialogFragment : DialogFragment() {
     }
 
 
+    @SuppressLint("UseGetLayoutInflater")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(this.requireContext())
         this.binding = DataBindingUtil.inflate(

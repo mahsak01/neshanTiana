@@ -54,7 +54,7 @@ class RoutingLocationMapFragment : Fragment() {
     var animSt: AnimationStyle? = null
 
     // used to track request permissions
-    val REQUEST_CODE = 123
+    private val REQUEST_CODE = 123
 
     // location updates interval - 1 sec
     private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 1000
@@ -83,7 +83,7 @@ class RoutingLocationMapFragment : Fragment() {
 
     private var onMapPolyline:Polyline?=null
 
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -92,8 +92,6 @@ class RoutingLocationMapFragment : Fragment() {
                 }
             }
         }
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -105,10 +103,9 @@ class RoutingLocationMapFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onResume() {
@@ -144,15 +141,12 @@ class RoutingLocationMapFragment : Fragment() {
     }
 
     private fun initLayoutReferences() {
-        // Initializing views
         initViews()
         setInformation()
     }
 
-    // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentRoutingLocationMapMapMv
-
     }
 
     private fun neshanRoutingApi() {
@@ -173,21 +167,18 @@ class RoutingLocationMapFragment : Fragment() {
                 for (step in route?.legs?.get(0)!!.directionSteps) {
                     decodedStepByStepPath?.addAll(PolylineEncoding.decode(step.encodedPolyline))
                 }
-                onMapPolyline =  Polyline (routeOverviewPolylinePoints, getLineStyle());
+                onMapPolyline =  Polyline (routeOverviewPolylinePoints, getLineStyle())
                 //draw polyline between route points
-                map?.addPolyline(onMapPolyline);
+                map?.addPolyline(onMapPolyline)
                 // focusing camera on first point of drawn line
                 binding.FragmentRoutingLocationMapRoutingWithMapBtn.visibility=View.VISIBLE
             }
 
             override fun onFailure(call: Call<NeshanDirectionResult>, t: Throwable) {
-                TODO("Not yet implemented")
             }
-
         })
-
-
     }
+
     private fun getLineStyle(): LineStyle? {
         val lineStCr = LineStyleBuilder()
         lineStCr.color = Color(76.toShort(), 230.toShort(), 76.toShort(), 120.toShort())
@@ -245,14 +236,10 @@ class RoutingLocationMapFragment : Fragment() {
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -286,7 +273,6 @@ class RoutingLocationMapFragment : Fragment() {
                     )
                         .show()
                 }
-
             }
     }
 
@@ -299,7 +285,6 @@ class RoutingLocationMapFragment : Fragment() {
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -307,7 +292,6 @@ class RoutingLocationMapFragment : Fragment() {
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -327,7 +311,6 @@ class RoutingLocationMapFragment : Fragment() {
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         previewRequest.launch(intent)
-
     }
 
     private fun onLocationChange() {
@@ -338,7 +321,7 @@ class RoutingLocationMapFragment : Fragment() {
 
     //TODO change with last location
     private fun setInformation() {
-        var latLng = LatLng(36.424520, 54.9665126)
+        val latLng = LatLng(36.424520, 54.9665126)
         map!!.moveCamera(latLng, 0f)
         map!!.setZoom(15f, 0.25f)
         customerLocationMarker = createMarker(latLng)
@@ -371,16 +354,14 @@ class RoutingLocationMapFragment : Fragment() {
             )
         )
         val markSt = markStCr.buildStyle()
-
         // Creating user marker
         myLocationMarker = Marker(loc, markSt)
-
         // Adding user marker to map!
         map!!.addMarker(myLocationMarker)
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
+    private fun createMarker(loc: LatLng?): Marker {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -390,10 +371,8 @@ class RoutingLocationMapFragment : Fragment() {
         animStBl.phaseInDuration = 0.5f
         animStBl.phaseOutDuration = 0.5f
         animSt = animStBl.buildStyle()
-
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
-
         val markStCr = MarkerStyleBuilder()
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
@@ -404,10 +383,7 @@ class RoutingLocationMapFragment : Fragment() {
         // AnimationStyle object - that was created before - is used here
         markStCr.animationStyle = animSt
         val markSt = markStCr.buildStyle()
-
         // Creating marker
         return Marker(loc, markSt)
-
     }
-
 }

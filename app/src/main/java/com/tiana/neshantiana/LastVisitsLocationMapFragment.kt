@@ -18,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.carto.graphics.Color
 import com.carto.styles.*
 import com.carto.utils.BitmapUtils
 import com.google.android.gms.common.api.ApiException
@@ -31,18 +30,10 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.tiana.neshantiana.databinding.FragmentLastVisitsLocationMapBinding
-import com.tiana.neshantiana.databinding.FragmentRoutingLocationMapBinding
-import com.tiana.neshantiana.databinding.FragmentSearchLocationCustomerMapBinding
 import org.neshan.common.model.LatLng
-import org.neshan.common.utils.PolylineEncoding
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
 import org.neshan.mapsdk.model.Polyline
-import org.neshan.servicessdk.direction.NeshanDirection
-import org.neshan.servicessdk.direction.model.NeshanDirectionResult
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.DateFormat
 import java.util.*
 
@@ -78,14 +69,8 @@ class LastVisitsLocationMapFragment:Fragment() {
     // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
     private var myLocationMarker: Marker? = null
-    private var customerLocationMarker: Marker? = null
 
-    private var decodedStepByStepPath: ArrayList<LatLng>? = null
-    private var routeOverviewPolylinePoints: ArrayList<LatLng>? = null
-
-    private var onMapPolyline: Polyline?=null
-
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -105,10 +90,9 @@ class LastVisitsLocationMapFragment:Fragment() {
     }
     override fun onStart() {
         super.onStart()
-        // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onResume() {
@@ -127,7 +111,6 @@ class LastVisitsLocationMapFragment:Fragment() {
         }
         this.binding.FragmentLastVisitsLocationMapBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
-
         }
     }
 
@@ -145,7 +128,6 @@ class LastVisitsLocationMapFragment:Fragment() {
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentLastVisitsLocationMapMapMv
-
     }
 
     private fun initLocation() {
@@ -202,8 +184,7 @@ class LastVisitsLocationMapFragment:Fragment() {
 
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -250,7 +231,6 @@ class LastVisitsLocationMapFragment:Fragment() {
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -258,7 +238,6 @@ class LastVisitsLocationMapFragment:Fragment() {
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -335,7 +314,7 @@ class LastVisitsLocationMapFragment:Fragment() {
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
+    private fun createMarker(loc: LatLng?): Marker {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle

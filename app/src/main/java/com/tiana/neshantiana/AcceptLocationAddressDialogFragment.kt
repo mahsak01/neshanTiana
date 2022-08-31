@@ -20,7 +20,6 @@ class AcceptLocationAddressDialogFragment(private val address:String ,private va
         setListeners()
         setInformation()
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,18 +27,11 @@ class AcceptLocationAddressDialogFragment(private val address:String ,private va
     ): View {
         return binding.root
     }
-
-
-
-
-
     private fun setInformation() {
             this.binding.fragmentAcceptLocationAddressDialogAddressLocationTv.text= "آدرس :$address"
 
     }
-
     private fun setListeners() {
-
         this.binding.fragmentAcceptLocationAddressDialogCancelBtn.setOnClickListener {
             dismiss()
         }
@@ -47,7 +39,6 @@ class AcceptLocationAddressDialogFragment(private val address:String ,private va
             dismiss()
             eventListener.accept(address)
         }
-
     }
 
     @SuppressLint("UseGetLayoutInflater")

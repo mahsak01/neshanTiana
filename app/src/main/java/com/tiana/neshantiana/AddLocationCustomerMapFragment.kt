@@ -39,7 +39,8 @@ import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
 
-class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFragment.EventListener {
+class AddLocationCustomerMapFragment : Fragment(),
+    AcceptLocationAddressDialogFragment.EventListener {
     // map UI element
     var map: MapView? = null
 
@@ -65,6 +66,7 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
     private var locationSettingsRequest: LocationSettingsRequest? = null
     private var locationCallback: LocationCallback? = null
     private var lastUpdateTime: String? = null
+
     // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
@@ -77,7 +79,7 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
     private val shareViewModel: LocationShareViewModel by activityViewModels()
 
 
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -87,13 +89,11 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
             }
         }
 
-
     override fun onStart() {
         super.onStart()
-        // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onCreateView(
@@ -136,7 +136,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
 
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
-
         if (selectMarker != null)
             map?.removeMarker(selectMarker)
         val markStCr = MarkerStyleBuilder()
@@ -202,7 +201,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                     null
                 )
             }
-
         }
     }
 
@@ -259,14 +257,10 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -299,7 +293,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                     )
                         .show()
                 }
-
             }
     }
 
@@ -312,7 +305,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -320,7 +312,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -340,7 +331,6 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
         intent.data = uri
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         previewRequest.launch(intent)
-
     }
 
     private fun onLocationChange() {
@@ -375,8 +365,5 @@ class AddLocationCustomerMapFragment : Fragment(), AcceptLocationAddressDialogFr
     override fun accept(address: String) {
         shareViewModel.set(com.tiana.neshantiana.data.model.Location(lat!!, lon!!, address))
         this.requireActivity().onBackPressed()
-
     }
-
-
 }

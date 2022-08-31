@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import com.tiana.neshantiana.databinding.FragmentAcceptLocationAddressDialogBinding
 import com.tiana.neshantiana.databinding.FragmentLoadingBinding
 
 class LoadingFragment : DialogFragment() {
@@ -22,7 +21,6 @@ class LoadingFragment : DialogFragment() {
         params.height = 320
         dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
-
     @SuppressLint("UseGetLayoutInflater")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(this.requireContext())
@@ -36,5 +34,4 @@ class LoadingFragment : DialogFragment() {
         dialogBuilder.setView(binding.root)
         return dialogBuilder.create()
     }
-
 }

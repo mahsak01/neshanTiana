@@ -65,7 +65,6 @@ class LocationMenuBottomSheetFragment:BottomSheetDialogFragment() {
                 .navigate(R.id.locationNearCustomersMapFragment)
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

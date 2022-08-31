@@ -1,7 +1,6 @@
 package com.tiana.neshantiana
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -45,9 +44,6 @@ class MyLocationMapFragment : Fragment() {
     // map UI element
     var map: MapView? = null
 
-    // marker animation style
-    var animSt: AnimationStyle? = null
-
     // used to track request permissions
     val REQUEST_CODE = 123
 
@@ -72,7 +68,7 @@ class MyLocationMapFragment : Fragment() {
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
 
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
              when (it.resultCode) {
                         AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -81,7 +77,6 @@ class MyLocationMapFragment : Fragment() {
                         }
                     }
                 }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,10 +89,9 @@ class MyLocationMapFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onResume() {
@@ -125,15 +119,12 @@ class MyLocationMapFragment : Fragment() {
     }
 
     private fun initLayoutReferences() {
-        // Initializing views
         initViews()
     }
 
-    // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentMyLocationMapMv
     }
-
 
     private fun initLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -183,14 +174,10 @@ class MyLocationMapFragment : Fragment() {
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -223,7 +210,6 @@ class MyLocationMapFragment : Fragment() {
                     )
                         .show()
                 }
-
             }
     }
 
@@ -236,15 +222,11 @@ class MyLocationMapFragment : Fragment() {
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
-
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
-                        // open device settings when the permission is
-                        // denied permanently
                         openSettings()
                     }
                 }
-
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -288,10 +270,8 @@ class MyLocationMapFragment : Fragment() {
             )
         )
         val markSt = markStCr.buildStyle()
-
         // Creating user marker
         marker = Marker(loc, markSt)
-
         // Adding user marker to map!
         map!!.addMarker(marker)
     }

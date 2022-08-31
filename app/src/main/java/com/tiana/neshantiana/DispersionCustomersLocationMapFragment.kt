@@ -33,7 +33,6 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.tiana.neshantiana.databinding.FragmentDispersionCustomersLocationMapBinding
-import com.tiana.neshantiana.databinding.FragmentLastVisitsLocationMapBinding
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
@@ -41,9 +40,10 @@ import org.neshan.mapsdk.model.Polyline
 import java.text.DateFormat
 import java.util.*
 
-class DispersionCustomersLocationMapFragment:Fragment() {
+class DispersionCustomersLocationMapFragment : Fragment() {
 
     lateinit var binding: FragmentDispersionCustomersLocationMapBinding
+
     // map UI element
     var map: MapView? = null
 
@@ -73,14 +73,9 @@ class DispersionCustomersLocationMapFragment:Fragment() {
     // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
     private var myLocationMarker: Marker? = null
-    private var customerLocationMarker: Marker? = null
 
-    private var decodedStepByStepPath: ArrayList<LatLng>? = null
-    private var routeOverviewPolylinePoints: ArrayList<LatLng>? = null
 
-    private var onMapPolyline: Polyline?=null
-
-    val previewRequest =
+    private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 AppCompatActivity.RESULT_OK -> mRequestingLocationUpdates = true
@@ -95,15 +90,16 @@ class DispersionCustomersLocationMapFragment:Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDispersionCustomersLocationMapBinding.inflate(layoutInflater, container, false)
+        binding =
+            FragmentDispersionCustomersLocationMapBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
     override fun onStart() {
         super.onStart()
-        // everything related to ui is initialized here
-        initLayoutReferences();
-        initLocation();
-        startReceivingLocationUpdates();
+        initLayoutReferences()
+        initLocation()
+        startReceivingLocationUpdates()
     }
 
     override fun onResume() {
@@ -191,14 +187,10 @@ class DispersionCustomersLocationMapFragment:Fragment() {
                         locationCallback!!, Looper.myLooper()
                     )
                     onLocationChange()
-
                 }
-
-
             }
             ?.addOnFailureListener(requireActivity()) { e ->
-                val statusCode = (e as ApiException).statusCode
-                when (statusCode) {
+                when ((e as ApiException).statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
                             val rae = e as ResolvableApiException
@@ -232,7 +224,6 @@ class DispersionCustomersLocationMapFragment:Fragment() {
                     )
                         .show()
                 }
-
             }
     }
 
@@ -330,7 +321,7 @@ class DispersionCustomersLocationMapFragment:Fragment() {
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker? {
+    private fun createMarker(loc: LatLng?): Marker {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -357,8 +348,5 @@ class DispersionCustomersLocationMapFragment:Fragment() {
 
         // Creating marker
         return Marker(loc, markSt)
-
     }
-
-
 }
