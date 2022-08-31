@@ -190,7 +190,7 @@ class RoutingLocationMapFragment : Fragment() {
     }
     private fun getLineStyle(): LineStyle? {
         val lineStCr = LineStyleBuilder()
-        lineStCr.color = Color(130.toShort(), 230.toShort(), 130.toShort(), 120.toShort())
+        lineStCr.color = Color(76.toShort(), 230.toShort(), 76.toShort(), 120.toShort())
         lineStCr.width = 12f
         lineStCr.stretchFactor = 0f
         return lineStCr.buildStyle()
