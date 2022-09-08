@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.tiana.neshantiana.MainFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_neshanMapFragment"
+            app:destination="@id/neshanMapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/neshanMapFragment"
+        android:name="com.tiana.neshantiana.NeshanMapFragment"
+        android:label="NeshanMapFragment" >
+        <action
+            android:id="@+id/action_neshanMapFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>

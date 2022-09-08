@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layoutDirection="rtl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@drawable/item_background">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_location"
+            app:lottie_speed="1"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/fragmentAcceptLocationAddressDialog_AddressLocationTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textDirection="rtl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lottieAnimationView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="TextView" />
+
+        <Button
+            android:id="@+id/fragmentAcceptLocationAddressDialog_cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="انصراف"
+            android:textColor="@color/green"
+            android:backgroundTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentAcceptLocationAddressDialog_AddressLocationTv" />
+
+        <Button
+            android:id="@+id/fragmentAcceptLocationAddressDialog_acceptBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="تایید"
+            android:backgroundTint="@color/green"
+            app:layout_constraintEnd_toStartOf="@+id/fragmentAcceptLocationAddressDialog_cancelBtn"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentAcceptLocationAddressDialog_AddressLocationTv" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
