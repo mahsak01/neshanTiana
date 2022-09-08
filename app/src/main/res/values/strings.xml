@@ -11,4 +11,12 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="near_customers">مشتریان نزدیک</string>
+    <string name="routing">مسیریابی</string>
+    <string name="dispersion_customers">پراکندگی مشتریان</string>
+    <string name="my_location">موقعیت من</string>
+    <string name="last_visits">آخرین ویزیت ها</string>
+    <string name="add_customers">تعریف مختصات مشتری</string>
+    <string name="edit_customers">تغییر مختصات مشتری</string>
+    <string name="search_customers">مختصات مشتریان</string>
 </resources>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layoutDirection="rtl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/bottom_sheet_background">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:weightSum="3">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_nearCustomersLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_nearCustomersIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_near_customers"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_nearCustomersTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_nearCustomersTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_nearCustomersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/near_customers"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_nearCustomersIv"
+                    tools:ignore="MissingConstraints" />
+                    " />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_routingLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_routingIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_routing"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_routingTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_routingTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_routingTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/routing"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_routingIv"
+                    tools:ignore="MissingConstraints" />
+                " />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_dispersion_customers"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/dispersion_customers"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_dispersionCustomersIv"
+                    tools:ignore="MissingConstraints" />
+                " />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:weightSum="3">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_myLocationLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_myLocationIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_my_location"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_myLocationTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_myLocationTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_myLocationTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/my_location"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_myLocationIv"
+                    tools:ignore="MissingConstraints" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_LastVisitsLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_LastVisitsIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_last_visits"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_LastVisitsTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_LastVisitsTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_LastVisitsTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/last_visits"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_LastVisitsIv"
+                    tools:ignore="MissingConstraints" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_AddCustomersLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_AddCustomersIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_customers"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_AddCustomersTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_AddCustomersTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_AddCustomersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/add_customers"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_AddCustomersIv"
+                    tools:ignore="MissingConstraints" />
+                " />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:weightSum="3">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_editCustomersLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_editCustomersIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_edit_customers"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_editCustomersTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_editCustomersTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_editCustomersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/edit_customers"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_editCustomersIv"
+                    tools:ignore="MissingConstraints" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragmentLocationMenuBottomSheet_searchCustomersLl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_searchCustomersIv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_search_customers"
+                    app:layout_constraintEnd_toEndOf="@+id/fragmentLocationMenuBottomSheet_searchCustomersTv"
+                    app:layout_constraintStart_toStartOf="@+id/fragmentLocationMenuBottomSheet_searchCustomersTv"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/fragmentLocationMenuBottomSheet_searchCustomersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/search_customers"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentLocationMenuBottomSheet_searchCustomersIv"
+                    tools:ignore="MissingConstraints" />
+                " />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

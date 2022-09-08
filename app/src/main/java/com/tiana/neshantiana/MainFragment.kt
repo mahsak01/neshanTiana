@@ -35,8 +35,8 @@ class MainFragment : Fragment() {
 
     private fun setListeners() {
         binding.FragmentMainMapBtn.setOnClickListener {
-            this.findNavController()
-                .navigate(R.id.neshanMapFragment)
+            val bottomSheetDialog = LocationMenuBottomSheetFragment()
+            bottomSheetDialog.show(requireFragmentManager(), "bottomSheetDialog")
         }
     }
 
