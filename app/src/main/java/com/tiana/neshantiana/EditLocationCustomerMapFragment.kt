@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.tiana.neshantiana.data.model.Customer
+import com.tiana.neshantiana.data.model.CustomerLocation
 import com.tiana.neshantiana.databinding.FragmentEditLocationCustomerMapBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
@@ -41,7 +44,12 @@ import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
 
-class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFragment.EventListener {
+class EditLocationCustomerMapFragment : Fragment(),
+    AcceptLocationAddressDialogFragment.EventListener, SearchCustomerItemAdapter.EventListener {
+
+
+    var customer: Customer? = null
+
     // map UI element
     var map: MapView? = null
 
@@ -67,6 +75,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
     private var locationSettingsRequest: LocationSettingsRequest? = null
     private var locationCallback: LocationCallback? = null
     private var lastUpdateTime: String? = null
+
     // boolean flag to toggle the ui
     private var mRequestingLocationUpdates: Boolean? = null
     private var marker: Marker? = null
@@ -77,7 +86,8 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
     private val viewModel: LocationAddressViewModel by viewModel()
     private var loadingFragment: LoadingFragment? = null
     private val shareViewModel: LocationShareViewModel by activityViewModels()
-
+    var searchCustomerDialogFragment: SearchCustomerDialogFragment? = null
+    private var customerMarker:Marker?=null
 
     private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -126,7 +136,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng? , select:Boolean=true): Marker? {
+    private fun createMarker(loc: LatLng?, select: Boolean = true): Marker? {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -140,7 +150,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
 
-        if (!select){
+        if (!select) {
             val markStCr = MarkerStyleBuilder()
             markStCr.size = 30f
             markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
@@ -154,8 +164,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
 
             // Creating marker
             return Marker(loc, markSt)
-        }
-        else{
+        } else {
             if (selectMarker != null)
                 map?.removeMarker(selectMarker)
             val markStCr = MarkerStyleBuilder()
@@ -185,15 +194,46 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         super.onResume()
         startLocationUpdates()
         setListener()
-        setInformation()
+        setObserver()
     }
 
-    //TODO change with last location
-    private fun setInformation(){
-        val latLng = LatLng(36.424520, 54.9665126)
+    private fun setObserver() {
+        viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
+            if (it != null) {
+                loadingFragment?.dismiss()
+                val acceptLocationAddressDialogFragment =
+                    AcceptLocationAddressDialogFragment(it.formatted_address.toString(), this)
+                acceptLocationAddressDialogFragment.show(
+                    requireActivity().supportFragmentManager,
+                    null
+                )
+            }
+        }
+        viewModel.customerLocationLiveData.observe(viewLifecycleOwner) {
+            if (it != null) {
+                setInformation(it[0])
+            }
+        }
+    }
+
+    private fun setInformation(customerLocation: CustomerLocation) {
+        if (customerMarker!=null)
+            map!!.removeMarker(customerMarker)
+        val latLng = customerLocation.Latitude?.let {
+            customerLocation.Longitude?.let { it1 ->
+                LatLng(
+                    it,
+                    it1
+                )
+            }
+        }
+        map!!.moveCamera(latLng, 0f)
+        map!!.setZoom(15f, 0.25f)
+        customerMarker= createMarker(latLng,false)
         map!!.addMarker(
-            createMarker(latLng,false)
+            customerMarker
         )
+        loadingFragment?.dismiss()
     }
     private fun setListener() {
         this.binding.FragmentEditLocationCustomerMyLocationBtn.setOnClickListener {
@@ -220,17 +260,16 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         this.binding.FragmentEditLocationCustomerBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
         }
-        viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                loadingFragment?.dismiss()
-                val acceptLocationAddressDialogFragment =
-                    AcceptLocationAddressDialogFragment(it.formatted_address.toString(), this)
-                acceptLocationAddressDialogFragment.show(
-                    requireActivity().supportFragmentManager,
-                    null
-                )
-            }
+
+        this.binding.FragmentEditLocationCustomerCustomerNameTIET.setOnClickListener {
+            searchCustomerDialogFragment =
+                SearchCustomerDialogFragment(this)
+            searchCustomerDialogFragment!!.show(
+                requireActivity().supportFragmentManager,
+                null
+            )
         }
+
     }
 
     override fun onPause() {
@@ -334,6 +373,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
+
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -341,6 +381,7 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
                         openSettings()
                     }
                 }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -390,8 +431,41 @@ class EditLocationCustomerMapFragment:Fragment(),AcceptLocationAddressDialogFrag
         // Adding user marker to map!
         map!!.addMarker(marker)
     }
+
     override fun accept(address: String) {
         shareViewModel.set(com.tiana.neshantiana.data.model.Location(lat!!, lon!!, address))
-        this.requireActivity().onBackPressed()
+        if (customer!=null){
+            customer!!.customerInfoSN?.let { viewModel.updateLocation(lat!!,lon!!, it) }
+            Toast.makeText(requireActivity(), "مختصات مشتری تغییر یافت", Toast.LENGTH_LONG).show()
+            map!!.removeMarker(customerMarker)
+            customerMarker=selectMarker
+            selectMarker=null
+
+        }
+        else
+            Toast.makeText(requireActivity(), "لطفا مشتری را انتخاب کنید", Toast.LENGTH_LONG).show()
+
     }
+
+    fun setLocationOfCustomer(customer: Customer) {
+        customer.customerInfoSN?.let { viewModel.getCustomerLocation(it) }
+        this.loadingFragment =
+            LoadingFragment()
+        loadingFragment?.show(this.childFragmentManager, null)
+    }
+
+    override fun click(customer: Customer) {
+        searchCustomerDialogFragment?.dismiss()
+
+        if (customer != null) {
+            this.customer = customer
+            this.binding.FragmentEditLocationCustomerCustomerNameTI.editText!!.text =
+                Editable.Factory.getInstance().newEditable(customer.fullName)
+            setLocationOfCustomer(customer)
+        } else {
+            this.binding.FragmentEditLocationCustomerCustomerNameTI.editText!!.text =
+                Editable.Factory.getInstance().newEditable("")
+        }
+    }
+
 }

@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|center_vertical"
                         android:paddingRight="20dp"
-                        android:text="تعریف مختصات مشتری"
+                        android:text="تغییر مختصات مشتری"
                         android:textColor="@color/white" />
                 </FrameLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -68,9 +68,10 @@
                 tools:ignore="MissingConstraints">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/FragmentEditLocationCustomer_customerNameTIET"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_round_search_24"
                     android:drawablePadding="5dp"
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>

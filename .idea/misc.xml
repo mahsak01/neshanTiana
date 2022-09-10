@@ -6,7 +6,10 @@
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable-v24/item_background.xml" value="0.1565" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/activity_routing.xml" value="0.1035" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/bottom_sheet_background.xml" value="0.1" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/fragment_search_customer_dialog.xml" value="0.1425" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_add_customers.xml" value="0.1" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_baseline_refresh_24.xml" value="0.1225" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_dispersion_customers.xml" value="0.1425" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_my_location.xml" value="0.1" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_near_customers.xml" value="0.1" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/drawable/ic_round_close_24.xml" value="0.1305" />
@@ -18,15 +21,18 @@
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_edit_location_customer_map.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_floating_action_button.xml" value="0.209375" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_last_visits_location_map.xml" value="0.1" />
-        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_location_description_dialog.xml" value="0.33" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_loading.xml" value="0.18020833333333333" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_location_description_dialog.xml" value="0.25" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_location_menu_bottom_sheet.xml" value="0.25" />
-        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_location_near_customers_map.xml" value="0.1" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_location_near_customers_map.xml" value="0.25" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_main.xml" value="0.125" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_my_location_map.xml" value="0.209375" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_neshan_map.xml" value="0.25" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_routing_location_map.xml" value="0.16" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_search_customer_dialog.xml" value="0.25" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_search_location_caustomer_map.xml" value="0.18" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/fragment_search_location_customer_map.xml" value="0.209375" />
+        <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/layout_customer_item.xml" value="0.33" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/layout_loading.xml" value="0.33" />
         <entry key="..\:/Users/mah80/StudioProjects/neshantiana3/app/src/main/res/layout/test.xml" value="0.2812006319115324" />
       </map>

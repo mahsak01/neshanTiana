@@ -10,16 +10,18 @@ import retrofit2.http.Query
 import io.reactivex.Single
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 
-interface ApiService {
+interface ApiServiceNeshan {
 
     @GET("reverse?")
     fun getLocationAddress(
         @Query("lat") latitude: String,
         @Query("lng") longitude: String
     ): Single<LocationAddress>
+
+
 }
 
-fun createApiServiceInstance(): ApiService {
+fun createApiServiceInstance(): ApiServiceNeshan {
 
     val okHttpClient = OkHttpClient.Builder()
         .addInterceptor {
@@ -37,5 +39,5 @@ fun createApiServiceInstance(): ApiService {
         .build()
 
 
-    return retrofit.create(ApiService::class.java)
+    return retrofit.create(ApiServiceNeshan::class.java)
 }

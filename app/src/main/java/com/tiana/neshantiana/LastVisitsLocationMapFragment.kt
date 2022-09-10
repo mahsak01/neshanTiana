@@ -18,7 +18,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.carto.styles.*
+import com.carto.styles.AnimationStyle
+import com.carto.styles.AnimationStyleBuilder
+import com.carto.styles.AnimationType
+import com.carto.styles.MarkerStyleBuilder
 import com.carto.utils.BitmapUtils
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -33,7 +36,6 @@ import com.tiana.neshantiana.databinding.FragmentLastVisitsLocationMapBinding
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
-import org.neshan.mapsdk.model.Polyline
 import java.text.DateFormat
 import java.util.*
 
@@ -281,12 +283,12 @@ class LastVisitsLocationMapFragment:Fragment() {
             createMarker(latLng)
         )
         map!!.setOnMarkerClickListener {
-            val locationDescriptionDialogFragment =
-                LocationDescriptionDialogFragment()
-            locationDescriptionDialogFragment.show(
-                requireActivity().supportFragmentManager,
-                null
-            )
+//            val locationDescriptionDialogFragment =
+//                LocationDescriptionDialogFragment()
+//            locationDescriptionDialogFragment.show(
+//                requireActivity().supportFragmentManager,
+//                null
+//            )
         }
     }
 
@@ -341,10 +343,5 @@ class LastVisitsLocationMapFragment:Fragment() {
 
         // Creating marker
         return Marker(loc, markSt)
-
     }
-
-
-
-
 }

@@ -6,70 +6,67 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/item_background"
+        android:layout_height="match_parent"
         android:layoutDirection="rtl"
+
         android:padding="20dp">
-
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/animation_information"
-            app:lottie_speed="1"
-            tools:ignore="MissingConstraints" />
-
-
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:background="@drawable/item_background"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
-            app:layout_constraintTop_toTopOf="@+id/fragmentLocationDescriptionDialog_lottieAnimationView">
+            android:layout_marginTop="60dp"
+            android:padding="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absolute0X="20dp">
 
             <TextView
+                android:paddingTop="10dp"
                 android:id="@+id/fragmentLocationDescriptionDialog_customerNameTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="اسم مشتری: _"
-                android:textSize="16sp" />
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="اسم مشتری: _" />
 
             <TextView
                 android:id="@+id/fragmentLocationDescriptionDialog_customerLocationTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="آدرس: _"
-                android:textSize="16sp" />
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="آدرس: _" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="شماره تلفن: "
-                    android:textSize="16sp"/>
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/fragmentLocationDescriptionDialog_customerPhoneTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textColor="@color/green"
-                    android:text="َ0233233333"
                     android:drawableEnd="@drawable/ic_baseline_phone_24"
+                    android:text="_"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -77,20 +74,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="شماره موبایل: "
-                    android:textSize="16sp"/>
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/fragmentLocationDescriptionDialog_customerPhoneCallTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textColor="@color/green"
                     android:drawableEnd="@drawable/ic_baseline_smartphone_24"
-                    android:text="09100364536"
+                    android:text="_"
+                    android:textColor="@color/green"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -100,17 +100,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="آخرین ویزیت: 1401/10/05"
-                android:textSize="16sp" />
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="آخرین ویزیت: 1401/10/05" />
 
             <TextView
                 android:id="@+id/fragmentLocationDescriptionDialog_lastDateTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="آخرین ویزیت ویزیتور: 1401/10/05"
-                android:textSize="16sp" />
+                android:focusable="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="آخرین ویزیت ویزیتور: 1401/10/05" />
         </LinearLayout>
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fragmentLocationDescriptionDialog_lottieAnimationView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animation_information"
+            app:lottie_speed="1"
+            tools:ignore="MissingConstraints" />
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

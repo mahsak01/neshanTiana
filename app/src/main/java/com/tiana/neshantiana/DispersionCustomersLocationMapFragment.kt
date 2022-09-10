@@ -33,16 +33,18 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.tiana.neshantiana.databinding.FragmentDispersionCustomersLocationMapBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
-import org.neshan.mapsdk.model.Polyline
 import java.text.DateFormat
 import java.util.*
+import java.util.concurrent.Executors
 
 class DispersionCustomersLocationMapFragment : Fragment() {
 
     lateinit var binding: FragmentDispersionCustomersLocationMapBinding
+    private val viewModel: LocationAddressViewModel by viewModel()
 
     // map UI element
     var map: MapView? = null
@@ -74,6 +76,7 @@ class DispersionCustomersLocationMapFragment : Fragment() {
     private var mRequestingLocationUpdates: Boolean? = null
     private var myLocationMarker: Marker? = null
 
+    private var loadingFragment: LoadingFragment? = null
 
     private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -130,13 +133,36 @@ class DispersionCustomersLocationMapFragment : Fragment() {
     private fun initLayoutReferences() {
         // Initializing views
         initViews()
+        observeObservers()
         setInformation()
+    }
+
+    private fun observeObservers() {
+        this.viewModel.customerScatteringLiveData.observe(viewLifecycleOwner) {
+            val size = (it.size / 100) + 1
+            val executor = Executors.newFixedThreadPool(size)
+            for (i in 0..size) {
+                val worker = Runnable {
+                    val start = (i * 100)
+                    val end = (i + 1) * 100
+                    for (j in start..end) {
+                        val latLng =
+                            LatLng(it[j].Latitude!!.toDouble(), it[j].Longitude!!.toDouble())
+                        map!!.addMarker(
+                            createMarker(latLng)
+                        )
+                    }
+                }
+                executor.execute(worker)
+            }
+            executor.shutdown()
+            loadingFragment?.dismiss()
+        }
     }
 
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentDispersionCustomersLocationMapMapMv
-
     }
 
     private fun initLocation() {
@@ -273,28 +299,26 @@ class DispersionCustomersLocationMapFragment : Fragment() {
         }
     }
 
-    //TODO change with last location
     private fun setInformation() {
-        var latLng = LatLng(36.424520, 54.9665126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-        latLng = LatLng(36.454520, 54.9665126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-        latLng = LatLng(36.424520, 54.9765126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
+        this.loadingFragment =
+            LoadingFragment()
+        loadingFragment?.show(this.childFragmentManager, null)
+        viewModel.getCustomerScattering()
         map!!.setOnMarkerClickListener {
-            val locationDescriptionDialogFragment =
-                LocationDescriptionDialogFragment()
-            locationDescriptionDialogFragment.show(
-                requireActivity().supportFragmentManager,
-                null
-            )
+            for (item in viewModel.customerScatteringLiveData.value!!) {
+                if (item.Latitude == it.latLng.latitude && item.Longitude == it.latLng.longitude) {
+                    val locationDescriptionDialogFragment =
+                        LocationDescriptionDialogFragment(item)
+                    locationDescriptionDialogFragment.show(
+                        requireActivity().supportFragmentManager,
+                        null
+                    )
+                    break
+                }
+            }
+
         }
+
     }
 
     private fun addUserMarker(loc: LatLng) {

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.carto.graphics.Color
 import com.carto.styles.*
@@ -30,20 +32,23 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.tiana.neshantiana.common.haversine
 import com.tiana.neshantiana.databinding.FragmentLocationNearCustomersMapBinding
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Circle
 import org.neshan.mapsdk.model.Marker
-import org.neshan.mapsdk.model.Polyline
 import java.text.DateFormat
 import java.util.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class LocationNearCustomersMapFragment : Fragment() {
 
 
     lateinit var binding: FragmentLocationNearCustomersMapBinding
+
+    private val viewModel: LocationAddressViewModel by viewModel()
 
     // map UI element
     var map: MapView? = null
@@ -53,6 +58,8 @@ class LocationNearCustomersMapFragment : Fragment() {
 
     // used to track request permissions
     private val REQUEST_CODE = 123
+
+    var isRefresh = false
 
     // location updates interval - 1 sec
     private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 1000
@@ -76,6 +83,7 @@ class LocationNearCustomersMapFragment : Fragment() {
     private var myLocationMarker: Marker? = null
 
     private var circle: Circle? = null
+    private var loadingFragment: LoadingFragment? = null
 
     private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -106,6 +114,7 @@ class LocationNearCustomersMapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        this.observeObservers()
         startLocationUpdates()
         setListener()
     }
@@ -121,6 +130,12 @@ class LocationNearCustomersMapFragment : Fragment() {
         this.binding.FragmentLocationNearCustomersMapBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
         }
+        this.binding.FragmentLocationNearCustomersMapRefreshBtn.setOnClickListener {
+            if (userLocation != null) {
+                isRefresh = true
+                refresh()
+            }
+        }
     }
 
     override fun onPause() {
@@ -131,12 +146,23 @@ class LocationNearCustomersMapFragment : Fragment() {
     private fun initLayoutReferences() {
         // Initializing views
         initViews()
-        setInformation()
     }
 
     // We use findViewByID for every element in our layout file here
     private fun initViews() {
         map = binding.FragmentLocationNearCustomersMapMapMv
+    }
+
+    private fun observeObservers() {
+        this.viewModel.customersAroundMeLiveData.observe(viewLifecycleOwner) {
+            it?.forEach { item ->
+                val latLng = LatLng(item.Latitude!!.toDouble(), item.Longitude!!.toDouble())
+                map!!.addMarker(
+                    createMarker(latLng)
+                )
+            }
+            loadingFragment?.dismiss()
+        }
     }
 
     private fun initLocation() {
@@ -145,19 +171,31 @@ class LocationNearCustomersMapFragment : Fragment() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
-                if (userLocation == null) {
-                    // location is received
-                    userLocation = locationResult.lastLocation
 
-                    if (userLocation != null) {
-                        val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
-                        map!!.moveCamera(latLng, 0f)
-                        map!!.setZoom(15f, 0.25f)
-                    }
+                // location is received
+                if (userLocation == null) {
+                    userLocation = locationResult.lastLocation
+                    val latLng = LatLng(userLocation!!.latitude, userLocation!!.longitude)
+                    map!!.moveCamera(latLng, 0f)
+                    map!!.setZoom(15f, 0.25f)
+                    setInformation()
+                    lastUpdateTime = DateFormat.getTimeInstance().format(Date())
+                    onLocationChange()
+
+                } else if (isRefresh || haversine(
+                        userLocation!!.latitude,
+                        userLocation!!.longitude,
+                        locationResult.lastLocation!!.latitude,
+                        locationResult.lastLocation!!.longitude
+                    ) >= 5
+                ) {
+                    userLocation = locationResult.lastLocation
+                    lastUpdateTime = DateFormat.getTimeInstance().format(Date())
+                    onLocationChange()
                 }
-                userLocation = locationResult.lastLocation
-                lastUpdateTime = DateFormat.getTimeInstance().format(Date())
-                onLocationChange()
+
+                isRefresh = false
+
             }
         }
         mRequestingLocationUpdates = false
@@ -210,6 +248,25 @@ class LocationNearCustomersMapFragment : Fragment() {
             }
     }
 
+    private fun refresh() {
+        this.binding.FragmentLocationNearCustomersMapRefreshBtn.isEnabled = false
+        this.binding.FragmentLocationNearCustomersMapRefreshBtn.setColorFilter(
+            ContextCompat.getColor(
+                this.requireContext(),
+                android.R.color.darker_gray
+            )
+        )
+        Handler(Looper.getMainLooper())
+            .postDelayed({
+                this.binding.FragmentLocationNearCustomersMapRefreshBtn.isEnabled = true
+                this.binding.FragmentLocationNearCustomersMapRefreshBtn.setColorFilter(
+                    ContextCompat.getColor(this.requireContext(), R.color.white)
+                )
+            }, 600000)
+        setInformation()
+
+    }
+
     private fun stopLocationUpdates() {
         // Removing location updates
         fusedLocationClient
@@ -237,6 +294,7 @@ class LocationNearCustomersMapFragment : Fragment() {
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
+
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -244,6 +302,7 @@ class LocationNearCustomersMapFragment : Fragment() {
                         openSettings()
                     }
                 }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -273,10 +332,11 @@ class LocationNearCustomersMapFragment : Fragment() {
 
     // Drawing circle on map
     private fun drawCircle() {
+
         // Here we use getLineStyle() method to define line styles
         this.circle = Circle(
             myLocationMarker?.latLng,
-            500.0,
+            620.0,
             Color(130.toShort(), 230.toShort(), 130.toShort(), 120.toShort()),
             getLineStyle()
         )
@@ -292,28 +352,33 @@ class LocationNearCustomersMapFragment : Fragment() {
         return lineStCr.buildStyle()
     }
 
-    //TODO change with last location
     private fun setInformation() {
-        var latLng = LatLng(36.4198056, 54.9611795)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-        latLng = LatLng(36.4188056, 54.9622795)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-        latLng = LatLng(36.4199056, 54.9622795)
-        map!!.addMarker(
-            createMarker(latLng)
+        this.loadingFragment =
+            LoadingFragment()
+        loadingFragment?.show(this.childFragmentManager, null)
+        if (circle != null) {
+            map?.removeCircle(circle)
+            drawCircle()
+        }
+        viewModel.getCustomersAroundMe(
+            userLocation!!.latitude.toString(),
+            userLocation!!.longitude.toString(), 500
         )
         map!!.setOnMarkerClickListener {
-            val locationDescriptionDialogFragment =
-                LocationDescriptionDialogFragment()
-            locationDescriptionDialogFragment.show(
-                requireActivity().supportFragmentManager,
-                null
-            )
+            for (item in viewModel.customersAroundMeLiveData.value!!) {
+                if (item.Latitude == it.latLng.latitude && item.Longitude == it.latLng.longitude) {
+                    val locationDescriptionDialogFragment =
+                        LocationDescriptionDialogFragment(item)
+                    locationDescriptionDialogFragment.show(
+                        requireActivity().supportFragmentManager,
+                        null
+                    )
+                    break
+                }
+            }
+
         }
+
     }
 
     private fun addUserMarker(loc: LatLng) {
@@ -331,11 +396,14 @@ class LocationNearCustomersMapFragment : Fragment() {
             )
         )
         val markSt = markStCr.buildStyle()
+
         // Creating user marker
         myLocationMarker = Marker(loc, markSt)
-        if (circle!=null)
-            map?.removeCircle(circle)
-        drawCircle()
+
+        if (circle == null)
+            drawCircle()
+
+
         // Adding user marker to map!
         map!!.addMarker(myLocationMarker)
     }

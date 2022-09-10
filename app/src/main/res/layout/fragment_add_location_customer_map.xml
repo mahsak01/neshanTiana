@@ -68,9 +68,10 @@
                 tools:ignore="MissingConstraints">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/FragmentAddLocationCustomer_customerNameTIET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_round_search_24"
+                    android:focusable="false"
                     android:drawablePadding="5dp"
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>

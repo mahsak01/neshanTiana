@@ -5,6 +5,7 @@ import com.tiana.neshantiana.data.implement.LocationAddressImplement
 import com.tiana.neshantiana.data.repository.LocationAddressRepository
 import com.tiana.neshantiana.data.source.remote.LocationAddressRemoteDataSource
 import com.tiana.neshantiana.service.http.createApiServiceInstance
+import com.tiana.neshantiana.service.http.createApiServiceTianaInstance
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -16,9 +17,11 @@ class App : Application() {
 
         val myModules = module {
             single { createApiServiceInstance() }
+            single { createApiServiceTianaInstance() }
             factory<LocationAddressRepository> {
                 LocationAddressImplement(
                     LocationAddressRemoteDataSource(
+                        get(),
                         get()
                     )
                 )

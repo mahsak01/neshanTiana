@@ -38,13 +38,14 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|center_vertical"
                         android:paddingRight="20dp"
-                        android:text="تعریف مختصات مشتری"
+                        android:text="مختصات مشتری"
                         android:textColor="@color/white" />
                 </FrameLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/FragmentSearchLocationCustomer_customerNameCl"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginTop="56dp"
@@ -64,13 +65,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="MissingConstraints">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/FragmentSearchLocationCustomer_customerNameTIET"
                     android:layout_width="match_parent"
+                    android:focusable="false"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_round_search_24"
                     android:drawablePadding="5dp"
                     android:maxLength="50" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -81,6 +82,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="116dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/FragmentSearchLocationCustomer_myLocationBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/green"
+            android:src="@drawable/ic_round_my_location_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

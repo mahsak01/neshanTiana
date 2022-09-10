@@ -10,9 +10,10 @@ import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.tiana.neshantiana.common.underlineText
+import com.tiana.neshantiana.data.model.CustomerAroundMe
 import com.tiana.neshantiana.databinding.FragmentLocationDescriptionDialogBinding
 
-class LocationDescriptionDialogFragment : DialogFragment() {
+class LocationDescriptionDialogFragment(private val customer: CustomerAroundMe) : DialogFragment() {
 
     private lateinit var binding: FragmentLocationDescriptionDialogBinding
     override fun onResume() {
@@ -24,14 +25,27 @@ class LocationDescriptionDialogFragment : DialogFragment() {
 
 
     private fun setInformation() {
-        this.binding.fragmentLocationDescriptionDialogCustomerPhoneTv.text =
-           underlineText("0233233333")
-        this.binding.fragmentLocationDescriptionDialogCustomerPhoneCallTv.text =
-            underlineText( "09100364536")
+        this.binding.fragmentLocationDescriptionDialogCustomerNameTv.text =
+            "اسم مشتری: " + customer.CustomerName
+        this.binding.fragmentLocationDescriptionDialogCustomerNameTv.isSelected=true
+        this.binding.fragmentLocationDescriptionDialogCustomerLocationTv.text =
+            "آدرس: " + customer.Address
+        this.binding.fragmentLocationDescriptionDialogCustomerLocationTv.isSelected=true
 
+        this.binding.fragmentLocationDescriptionDialogLastDateTv.text =
+            "آخرین ویزیت ویزیتور: " + customer.LastVisitDate
+        this.binding.fragmentLocationDescriptionDialogLastDateTv.isSelected=true
+        this.binding.fragmentLocationDescriptionDialogDateTv.text =
+            "آخرین ویزیت: " + customer.LastVisitDate
+        this.binding.fragmentLocationDescriptionDialogDateTv.isSelected=true
+
+        this.binding.fragmentLocationDescriptionDialogCustomerPhoneTv.text =
+            underlineText(customer.Tel.toString())
+        this.binding.fragmentLocationDescriptionDialogCustomerPhoneCallTv.text =
+            underlineText(customer.Mobile.toString())
     }
 
-    private fun setListener(){
+    private fun setListener() {
         this.binding.fragmentLocationDescriptionDialogCustomerPhoneTv.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data =
@@ -54,7 +68,6 @@ class LocationDescriptionDialogFragment : DialogFragment() {
             this.requireContext().startActivity(intent)
         }
     }
-
 
     @SuppressLint("UseGetLayoutInflater")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

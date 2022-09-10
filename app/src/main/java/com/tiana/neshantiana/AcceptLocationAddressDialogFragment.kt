@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.tiana.neshantiana.databinding.FragmentAcceptLocationAddressDialogBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AcceptLocationAddressDialogFragment(private val address:String ,private val eventListener: EventListener) : DialogFragment() {
     private lateinit var binding: FragmentAcceptLocationAddressDialogBinding

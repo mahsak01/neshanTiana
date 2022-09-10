@@ -17,9 +17,11 @@ class LoadingFragment : DialogFragment() {
     override fun onResume() {
         super.onResume()
         val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
-        params.width = 320
-        params.height = 320
+        params.width = 120
+        params.height = 120
         dialog!!.window!!.attributes = params as WindowManager.LayoutParams
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
     }
     @SuppressLint("UseGetLayoutInflater")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

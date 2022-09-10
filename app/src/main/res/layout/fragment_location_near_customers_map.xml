@@ -28,9 +28,16 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="start|center_vertical"
-                        android:layout_marginEnd="16dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_round_arrow_back_ios_24" />
+                    <ImageView
+                        android:id="@+id/FragmentLocationNearCustomersMap_refreshBtn"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginStart="40dp"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_baseline_refresh_24" />
 
                     <TextView
                         style="?textAppearanceHeadline6"

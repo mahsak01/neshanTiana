@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
 import android.view.*
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,6 +32,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.tiana.neshantiana.data.model.Customer
 import com.tiana.neshantiana.databinding.FragmentAddLocationCustomerMapBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
@@ -40,7 +42,7 @@ import java.text.DateFormat
 import java.util.*
 
 class AddLocationCustomerMapFragment : Fragment(),
-    AcceptLocationAddressDialogFragment.EventListener {
+    AcceptLocationAddressDialogFragment.EventListener, SearchCustomerItemAdapter.EventListener {
     // map UI element
     var map: MapView? = null
 
@@ -49,6 +51,8 @@ class AddLocationCustomerMapFragment : Fragment(),
 
     // used to track request permissions
     val REQUEST_CODE = 123
+
+    var customer: Customer? = null
 
     // location updates interval - 1 sec
     private val UPDATE_INTERVAL_IN_MILLISECONDS: Long = 1000
@@ -77,6 +81,8 @@ class AddLocationCustomerMapFragment : Fragment(),
     private val viewModel: LocationAddressViewModel by viewModel()
     private var loadingFragment: LoadingFragment? = null
     private val shareViewModel: LocationShareViewModel by activityViewModels()
+
+    var searchCustomerDialogFragment: SearchCustomerDialogFragment? = null
 
 
     private val previewRequest =
@@ -122,6 +128,7 @@ class AddLocationCustomerMapFragment : Fragment(),
         }
     }
 
+
     // This method gets a LatLng as input and adds a marker on that position
     private fun createMarker(loc: LatLng?): Marker? {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
@@ -164,6 +171,21 @@ class AddLocationCustomerMapFragment : Fragment(),
         super.onResume()
         startLocationUpdates()
         setListener()
+        setObserver()
+    }
+
+    private fun setObserver() {
+        viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
+            if (it != null) {
+                loadingFragment?.dismiss()
+                val acceptLocationAddressDialogFragment =
+                    AcceptLocationAddressDialogFragment(it.formatted_address.toString(), this)
+                acceptLocationAddressDialogFragment.show(
+                    requireActivity().supportFragmentManager,
+                    null
+                )
+            }
+        }
     }
 
     private fun setListener() {
@@ -188,20 +210,19 @@ class AddLocationCustomerMapFragment : Fragment(),
             }
         }
 
+        this.binding.FragmentAddLocationCustomerCustomerNameTIET.setOnClickListener {
+            searchCustomerDialogFragment =
+                SearchCustomerDialogFragment(this)
+            searchCustomerDialogFragment!!.show(
+                requireActivity().supportFragmentManager,
+                null
+            )
+        }
+
         this.binding.FragmentAddLocationCustomerBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
         }
-        viewModel.locationAddressLiveData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                loadingFragment?.dismiss()
-                val acceptLocationAddressDialogFragment =
-                    AcceptLocationAddressDialogFragment(it.formatted_address.toString(), this)
-                acceptLocationAddressDialogFragment.show(
-                    requireActivity().supportFragmentManager,
-                    null
-                )
-            }
-        }
+
     }
 
     override fun onPause() {
@@ -305,6 +326,7 @@ class AddLocationCustomerMapFragment : Fragment(),
                     mRequestingLocationUpdates = true
                     startLocationUpdates()
                 }
+
                 override fun onPermissionDenied(response: PermissionDeniedResponse) {
                     if (response.isPermanentlyDenied) {
                         // open device settings when the permission is
@@ -312,6 +334,7 @@ class AddLocationCustomerMapFragment : Fragment(),
                         openSettings()
                     }
                 }
+
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
                     token: PermissionToken
@@ -364,6 +387,26 @@ class AddLocationCustomerMapFragment : Fragment(),
 
     override fun accept(address: String) {
         shareViewModel.set(com.tiana.neshantiana.data.model.Location(lat!!, lon!!, address))
-        this.requireActivity().onBackPressed()
+        if (customer!=null){
+            customer!!.customerInfoSN?.let { viewModel.updateLocation(lat!!,lon!!, it) }
+            Toast.makeText(requireActivity(), "مختصات مشتری اضافه شد", Toast.LENGTH_LONG).show()
+
+        }
+        else
+            Toast.makeText(requireActivity(), "لطفا مشتری را انتخاب کنید", Toast.LENGTH_LONG).show()
+
+
+    }
+
+    override fun click(customer: Customer) {
+        searchCustomerDialogFragment?.dismiss()
+        this.customer=customer
+        if (customer != null) {
+            this.binding.FragmentAddLocationCustomerCustomerNameTI.editText!!.text =
+                Editable.Factory.getInstance().newEditable(customer.fullName)
+        } else {
+            this.binding.FragmentAddLocationCustomerCustomerNameTI.editText!!.text =
+                Editable.Factory.getInstance().newEditable("")
+        }
     }
 }
