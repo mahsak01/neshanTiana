@@ -161,15 +161,18 @@ class RoutingLocationMapFragment : Fragment(), SearchCustomerItemAdapter.EventLi
             )
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             requireContext().startActivity(intent)
-//            val uri = java.lang.String.format(
-//                Locale.ENGLISH,
-//                "geo:%f,%f",
-//                customerMarker?.latLng?.latitude,
-//                customerMarker?.latLng?.longitude
-//            )
-//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-//            if (intent.`package`=="")
-//            context?.startActivity(intent)
+        }
+        this.binding.FragmentRoutingLocationMapRoutingWithGoogleMapBtn.setOnClickListener {
+            val strUri =
+                "http://maps.google.com/maps?q=loc:" + customerMarker?.latLng?.latitude + "," + customerMarker?.latLng?.longitude + " (" + "Label which you want" + ")"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(strUri))
+
+            intent.setClassName(
+                "com.google.android.apps.maps",
+                "com.google.android.maps.MapsActivity"
+            )
+
+            startActivity(intent)
         }
         this.binding.FragmentRoutingLocationMapCustomerNameTIET.setOnClickListener {
             searchCustomerDialogFragment =
@@ -220,6 +223,8 @@ class RoutingLocationMapFragment : Fragment(), SearchCustomerItemAdapter.EventLi
                 map?.addPolyline(onMapPolyline)
                 // focusing camera on first point of drawn line
                 binding.FragmentRoutingLocationMapRoutingWithMapBtn.visibility = View.VISIBLE
+                binding.FragmentRoutingLocationMapRoutingWithGoogleMapBtn.visibility = View.VISIBLE
+
             }
 
             override fun onFailure(call: Call<NeshanDirectionResult>, t: Throwable) {
@@ -436,7 +441,7 @@ class RoutingLocationMapFragment : Fragment(), SearchCustomerItemAdapter.EventLi
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
             BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                resources, R.drawable.location
             )
         )
         // AnimationStyle object - that was created before - is used here

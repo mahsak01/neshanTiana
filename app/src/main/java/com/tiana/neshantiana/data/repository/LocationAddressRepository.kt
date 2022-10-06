@@ -1,10 +1,7 @@
 package com.tiana.neshantiana.data.repository
 
 import com.tiana.neshantiana.data.model.*
-import com.tiana.neshantiana.data.model.information.ChangeLocationCustomerInformation
-import com.tiana.neshantiana.data.model.information.CustomerAroundMeInformation
-import com.tiana.neshantiana.data.model.information.CustomerScatteringInformation
-import com.tiana.neshantiana.data.model.information.GetCustomerLocationInformation
+import com.tiana.neshantiana.data.model.information.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.Body
@@ -23,4 +20,7 @@ interface LocationAddressRepository {
     fun changeLocationCustomer( information: ChangeLocationCustomerInformation): Completable
 
     fun getCustomerLocation( information: GetCustomerLocationInformation):Single<List<CustomerLocation>>
+
+    fun getCustomerLastVisit( information: GetCustomerLastVisit):Single<List<CustomerLocation>>
+
 }

@@ -425,7 +425,7 @@ class LocationNearCustomersMapFragment : Fragment() {
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
             BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                resources, R.drawable.location
             )
         )
         // AnimationStyle object - that was created before - is used here

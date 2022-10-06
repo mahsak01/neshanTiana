@@ -18,6 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.carto.core.ScreenBounds
+import com.carto.core.ScreenPos
 import com.carto.styles.AnimationStyle
 import com.carto.styles.AnimationStyleBuilder
 import com.carto.styles.AnimationType
@@ -35,11 +37,16 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.tiana.neshantiana.databinding.FragmentDispersionCustomersLocationMapBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
+import org.neshan.common.model.LatLngBounds
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
+import java.lang.Double.max
 import java.text.DateFormat
 import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
+import kotlin.math.min
+
 
 class DispersionCustomersLocationMapFragment : Fragment() {
 
@@ -77,6 +84,7 @@ class DispersionCustomersLocationMapFragment : Fragment() {
     private var myLocationMarker: Marker? = null
 
     private var loadingFragment: LoadingFragment? = null
+
 
     private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -139,24 +147,28 @@ class DispersionCustomersLocationMapFragment : Fragment() {
 
     private fun observeObservers() {
         this.viewModel.customerScatteringLiveData.observe(viewLifecycleOwner) {
-            val size = (it.size / 100) + 1
-            val executor = Executors.newFixedThreadPool(size)
-            for (i in 0..size) {
-                val worker = Runnable {
-                    val start = (i * 100)
-                    val end = (i + 1) * 100
-                    for (j in start..end) {
-                        val latLng =
-                            LatLng(it[j].Latitude!!.toDouble(), it[j].Longitude!!.toDouble())
-                        map!!.addMarker(
-                            createMarker(latLng)
-                        )
+            Thread {
+                val size = (it.size / 100)
+                val executor = Executors.newFixedThreadPool(size)
+                for (i in 0..size) {
+                    val worker = Runnable {
+                        val start = (i * 100)
+                        var end = (i + 1) * 100
+                        if (i == size)
+                            end = (it.size - start) - 1
+                        for (j in start..end) {
+                            val latLng =
+                                LatLng(it[j].Latitude!!.toDouble(), it[j].Longitude!!.toDouble())
+                            addMarker(latLng)
+
+                        }
                     }
+                    executor.execute(worker)
                 }
-                executor.execute(worker)
-            }
-            executor.shutdown()
-            loadingFragment?.dismiss()
+                executor.shutdown()
+                loadingFragment?.dismiss()
+            }.start()
+
         }
     }
 
@@ -345,7 +357,8 @@ class DispersionCustomersLocationMapFragment : Fragment() {
     }
 
     // This method gets a LatLng as input and adds a marker on that position
-    private fun createMarker(loc: LatLng?): Marker {
+// This method gets a LngLat as input and adds a marker on that position
+    private fun addMarker(loc: LatLng): Marker? {
         // Creating animation for marker. We should use an object of type AnimationStyleBuilder, set
         // all animation features on it and then call buildStyle() method that returns an object of type
         // AnimationStyle
@@ -354,16 +367,15 @@ class DispersionCustomersLocationMapFragment : Fragment() {
         animStBl.sizeAnimationType = AnimationType.ANIMATION_TYPE_SPRING
         animStBl.phaseInDuration = 0.5f
         animStBl.phaseOutDuration = 0.5f
-        animSt = animStBl.buildStyle()
+        val animSt = animStBl.buildStyle()
 
         // Creating marker style. We should use an object of type MarkerStyleCreator, set all features on it
         // and then call buildStyle method on it. This method returns an object of type MarkerStyle
-
         val markStCr = MarkerStyleBuilder()
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
             BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                resources, R.drawable.location
             )
         )
         // AnimationStyle object - that was created before - is used here
@@ -371,6 +383,10 @@ class DispersionCustomersLocationMapFragment : Fragment() {
         val markSt = markStCr.buildStyle()
 
         // Creating marker
-        return Marker(loc, markSt)
+        val marker = Marker(loc, markSt)
+
+        // Adding marker to map!
+        map!!.addMarker(marker)
+        return marker
     }
 }

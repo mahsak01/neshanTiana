@@ -1,10 +1,7 @@
 package com.tiana.neshantiana.data.implement
 
 import com.tiana.neshantiana.data.model.*
-import com.tiana.neshantiana.data.model.information.ChangeLocationCustomerInformation
-import com.tiana.neshantiana.data.model.information.CustomerAroundMeInformation
-import com.tiana.neshantiana.data.model.information.CustomerScatteringInformation
-import com.tiana.neshantiana.data.model.information.GetCustomerLocationInformation
+import com.tiana.neshantiana.data.model.information.*
 import com.tiana.neshantiana.data.repository.LocationAddressRepository
 import com.tiana.neshantiana.data.source.LocationAddressDataSource
 import io.reactivex.Completable
@@ -33,6 +30,9 @@ class LocationAddressImplement(private val locationAddressRemoteDataSource: Loca
 
     override fun getCustomerLocation(information: GetCustomerLocationInformation): Single<List<CustomerLocation>> =
         locationAddressRemoteDataSource.getCustomerLocation(information)
+
+    override fun getCustomerLastVisit(information: GetCustomerLastVisit): Single<List<CustomerLocation>> =
+        locationAddressRemoteDataSource.getCustomerLastVisit(information)
 
 
 }

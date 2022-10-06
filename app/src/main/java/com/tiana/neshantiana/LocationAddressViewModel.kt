@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.tiana.neshantiana.common.NeshanTianaCompletableObserver
 import com.tiana.neshantiana.common.NeshanTianaSingleObserver
 import com.tiana.neshantiana.data.model.*
-import com.tiana.neshantiana.data.model.information.ChangeLocationCustomerInformation
-import com.tiana.neshantiana.data.model.information.CustomerAroundMeInformation
-import com.tiana.neshantiana.data.model.information.CustomerScatteringInformation
-import com.tiana.neshantiana.data.model.information.GetCustomerLocationInformation
+import com.tiana.neshantiana.data.model.information.*
 import com.tiana.neshantiana.data.repository.LocationAddressRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,6 +19,7 @@ class LocationAddressViewModel(private val locationAddressRepository: LocationAd
     val customerScatteringLiveData = MutableLiveData<List<CustomerAroundMe>>()
     val customersLiveData = MutableLiveData<List<Customer>>()
     val customerLocationLiveData = MutableLiveData<List<CustomerLocation>>()
+    val customerLastVisitLiveData = MutableLiveData<List<CustomerLocation>>()
 
     fun getLocationAddress(latitude: String, longitude: String) {
         locationAddressRepository.getLocationAddress(latitude, longitude)
@@ -97,6 +95,18 @@ class LocationAddressViewModel(private val locationAddressRepository: LocationAd
                 NeshanTianaSingleObserver<List<CustomerLocation>>(compositeDisposable) {
                 override fun onSuccess(t: List<CustomerLocation>) {
                     customerLocationLiveData.value = t
+                }
+            })
+    }
+
+    fun getCustomerLastVisit(businessUnitSN: Double,visitorSN:Double,lastDay:Int) {
+        locationAddressRepository.getCustomerLastVisit(GetCustomerLastVisit(businessUnitSN,lastDay,visitorSN))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object :
+                NeshanTianaSingleObserver<List<CustomerLocation>>(compositeDisposable) {
+                override fun onSuccess(t: List<CustomerLocation>) {
+                    customerLastVisitLiveData.value = t
                 }
             })
     }

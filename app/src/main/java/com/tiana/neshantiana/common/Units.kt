@@ -1,10 +1,8 @@
 package com.tiana.neshantiana.common
 
+
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import org.neshan.common.model.LatLng
-import org.neshan.mapsdk.MapView
-import java.util.concurrent.Executors
 
 const val earthRadiusKm: Double = 6372.8
 fun underlineText(text: String): SpannableString {

@@ -31,6 +31,15 @@
                         android:layout_marginEnd="16dp"
                         android:scaleType="centerInside"
                         app:srcCompat="@drawable/ic_round_arrow_back_ios_24" />
+                    <ImageView
+                        android:id="@+id/FragmentLastVisitsLocationMap_searchBtn"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginStart="32dp"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_round_search_24"
+                        app:tint="@color/white" />
 
                     <TextView
                         style="?textAppearanceHeadline6"
@@ -52,7 +61,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/FragmentLastVisitsLocationMap_customerNameTI"
+                android:id="@+id/FragmentLastVisitsLocationMap_lastDayTI"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

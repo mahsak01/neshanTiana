@@ -33,15 +33,20 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import com.tiana.neshantiana.databinding.FragmentLastVisitsLocationMapBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.neshan.common.model.LatLng
 import org.neshan.mapsdk.MapView
 import org.neshan.mapsdk.model.Marker
 import java.text.DateFormat
 import java.util.*
+import java.util.concurrent.Executors
 
 class LastVisitsLocationMapFragment:Fragment() {
 
     lateinit var binding: FragmentLastVisitsLocationMapBinding
+
+    private val viewModel: LocationAddressViewModel by viewModel()
+
     // map UI element
     var map: MapView? = null
 
@@ -72,6 +77,12 @@ class LastVisitsLocationMapFragment:Fragment() {
     private var mRequestingLocationUpdates: Boolean? = null
     private var myLocationMarker: Marker? = null
 
+    private var lastDay:Int?=null
+
+    private var loadingFragment: LoadingFragment? = null
+
+    private var markers = ArrayList<Marker>()
+
     private val previewRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
@@ -95,12 +106,14 @@ class LastVisitsLocationMapFragment:Fragment() {
         initLayoutReferences()
         initLocation()
         startReceivingLocationUpdates()
+        setInformation()
     }
 
     override fun onResume() {
         super.onResume()
         startLocationUpdates()
         setListener()
+        setObserver()
     }
 
     private fun setListener() {
@@ -114,6 +127,49 @@ class LastVisitsLocationMapFragment:Fragment() {
         this.binding.FragmentLastVisitsLocationMapBackBtn.setOnClickListener {
             this.requireActivity().onBackPressed()
         }
+        this.binding.FragmentLastVisitsLocationMapSearchBtn.setOnClickListener {
+            if (this.binding.FragmentLastVisitsLocationMapLastDayTI.editText?.text.isNullOrEmpty())
+                Toast.makeText(context,"لطفا تعداد روز را وارد کنید", Toast.LENGTH_SHORT).show()
+            else{
+                this.loadingFragment =
+                    LoadingFragment()
+                loadingFragment?.show(this.childFragmentManager, null)
+                lastDay=this.binding.FragmentLastVisitsLocationMapLastDayTI.editText?.text.toString().toInt()
+                viewModel.getCustomerLastVisit(1.101,1.101, lastDay!!)
+            }
+        }
+
+    }
+    private fun deleteAllMarker(){
+        for (item in markers)
+            map!!.removeMarker(item)
+    }
+    private fun setObserver(){
+        this.viewModel.customerLastVisitLiveData.observe(viewLifecycleOwner){
+            if (it.isNotEmpty())
+                deleteAllMarker()
+                Thread {
+                    val size = (it.size / 100)
+                    val executor = Executors.newFixedThreadPool(size)
+                    for (i in 0..size) {
+                        val worker = Runnable {
+                            val start = (i * 100)
+                            var end = (i + 1) * 100
+                            if (i == size)
+                                end = (it.size - start) - 1
+                            for (j in start..end) {
+                                val latLng =
+                                    LatLng(it[j].Latitude!!.toDouble(), it[j].Longitude!!.toDouble())
+                                markers.add(createMarker(latLng))
+                            }
+                        }
+                        executor.execute(worker)
+                    }
+                    executor.shutdown()
+                    loadingFragment?.dismiss()
+                }.start()
+
+        }
     }
 
     override fun onPause() {
@@ -124,7 +180,6 @@ class LastVisitsLocationMapFragment:Fragment() {
     private fun initLayoutReferences() {
         // Initializing views
         initViews()
-        setInformation()
     }
 
     // We use findViewByID for every element in our layout file here
@@ -270,26 +325,21 @@ class LastVisitsLocationMapFragment:Fragment() {
 
     //TODO change with last location
     private fun setInformation() {
-        var latLng = LatLng(36.424520, 54.9665126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-         latLng = LatLng(36.454520, 54.9665126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
-         latLng = LatLng(36.424520, 54.9765126)
-        map!!.addMarker(
-            createMarker(latLng)
-        )
         map!!.setOnMarkerClickListener {
-//            val locationDescriptionDialogFragment =
-//                LocationDescriptionDialogFragment()
-//            locationDescriptionDialogFragment.show(
-//                requireActivity().supportFragmentManager,
-//                null
-//            )
+            for (item in viewModel.customerScatteringLiveData.value!!) {
+                if (item.Latitude == it.latLng.latitude && item.Longitude == it.latLng.longitude) {
+                    val locationDescriptionDialogFragment =
+                        LocationDescriptionDialogFragment(item)
+                    locationDescriptionDialogFragment.show(
+                        requireActivity().supportFragmentManager,
+                        null
+                    )
+                    break
+                }
+            }
+
         }
+
     }
 
     private fun addUserMarker(loc: LatLng) {
@@ -334,14 +384,17 @@ class LastVisitsLocationMapFragment:Fragment() {
         markStCr.size = 30f
         markStCr.bitmap = BitmapUtils.createBitmapFromAndroidBitmap(
             BitmapFactory.decodeResource(
-                resources, org.neshan.mapsdk.R.drawable.ic_cluster_marker_blue
+                resources, R.drawable.location
             )
         )
         // AnimationStyle object - that was created before - is used here
         markStCr.animationStyle = animSt
         val markSt = markStCr.buildStyle()
 
+        val marker= Marker(loc, markSt)
+        // Adding marker to map!
+        map!!.addMarker(marker)
         // Creating marker
-        return Marker(loc, markSt)
+        return marker
     }
 }

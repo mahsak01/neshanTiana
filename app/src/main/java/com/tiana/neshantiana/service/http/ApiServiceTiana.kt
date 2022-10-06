@@ -2,10 +2,7 @@ package com.tiana.neshantiana.service.http
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.tiana.neshantiana.data.model.*
-import com.tiana.neshantiana.data.model.information.ChangeLocationCustomerInformation
-import com.tiana.neshantiana.data.model.information.CustomerAroundMeInformation
-import com.tiana.neshantiana.data.model.information.CustomerScatteringInformation
-import com.tiana.neshantiana.data.model.information.GetCustomerLocationInformation
+import com.tiana.neshantiana.data.model.information.*
 import io.reactivex.Completable
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -29,6 +26,9 @@ interface ApiServiceTiana {
 
     @POST("tiana/api/locationController/GetCustomerGeographicalLocation")
     fun getCustomerLocation(@Body information: GetCustomerLocationInformation):Single<List<CustomerLocation>>
+
+    @POST("tiana/api/locationController/GetCustomerLastVisit")
+    fun getCustomerLastVisit(@Body information:GetCustomerLastVisit):Single<List<CustomerLocation>>
 }
 
 fun createApiServiceTianaInstance(): ApiServiceTiana {

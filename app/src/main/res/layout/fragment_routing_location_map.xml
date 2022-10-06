@@ -118,5 +118,17 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/FragmentRoutingLocationMap_routingBtn"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/FragmentRoutingLocationMap_routingWithGoogleMapBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/green"
+            android:src="@drawable/ic_round_directions_24"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/FragmentRoutingLocationMap_routingWithMapBtn"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

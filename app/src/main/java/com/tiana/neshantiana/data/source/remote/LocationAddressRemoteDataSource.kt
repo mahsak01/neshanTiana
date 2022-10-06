@@ -1,10 +1,7 @@
 package com.tiana.neshantiana.data.source.remote
 
 import com.tiana.neshantiana.data.model.*
-import com.tiana.neshantiana.data.model.information.ChangeLocationCustomerInformation
-import com.tiana.neshantiana.data.model.information.CustomerAroundMeInformation
-import com.tiana.neshantiana.data.model.information.CustomerScatteringInformation
-import com.tiana.neshantiana.data.model.information.GetCustomerLocationInformation
+import com.tiana.neshantiana.data.model.information.*
 import com.tiana.neshantiana.data.source.LocationAddressDataSource
 import com.tiana.neshantiana.service.http.ApiServiceNeshan
 import com.tiana.neshantiana.service.http.ApiServiceTiana
@@ -37,4 +34,7 @@ class LocationAddressRemoteDataSource(
 
     override fun getCustomerLocation(information: GetCustomerLocationInformation): Single<List<CustomerLocation>> =
         apiServiceTiana.getCustomerLocation(information)
+
+    override fun getCustomerLastVisit(information: GetCustomerLastVisit): Single<List<CustomerLocation>> =
+        apiServiceTiana.getCustomerLastVisit(information)
 }
